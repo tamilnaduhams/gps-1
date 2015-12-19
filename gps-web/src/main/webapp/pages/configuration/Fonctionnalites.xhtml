@@ -1,0 +1,206 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/pages/public/SiTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions"> 
+
+    <ui:define name="title">
+        <h:outputText value="Gps"/>
+    </ui:define>
+
+    <ui:define name="bodybar">
+        <h:panelGrid columns="1">
+            <h:outputText value="Fonctionnalités"/>
+        </h:panelGrid>
+    </ui:define>
+
+    <ui:define name="bodybarRight">
+        <p:commandButton id="addButton1" value="Nouvelle fonctionnalité" icon="ui-icon-plusthick" action="#{fonctionnaliteManagedBean.prepareCreate()}" oncomplete="dialogCreate1.show();" update=":createFctForm1"/>
+        <p:tooltip for="addButton1" value="Ajouter une fonctionnalité" showEffect="fade" hideEffect="fade"/>
+    </ui:define>
+    
+    <ui:define name="body">
+        <h:form id="formRoles">
+            
+            <p:panel id="panelChoix">
+                <center>
+                    
+                    <h:outputLabel value="Profil : " for="basicPojo" style="font-size: 10px; line-height: 20px; color: #0078ae;"/>
+                    
+                    <p:autoComplete size="15" value="#{fonctionnaliteManagedBean.selectedDroit}" id="basicPojo" completeMethod="#{fonctionnaliteManagedBean.complete}"  
+                                    maxResults="5" dropdown="true" var="p" forceSelection="true" itemLabel="#{p.libelle}" itemValue="#{p}">
+                        <p:ajax event="itemSelect" listener="#{fonctionnaliteManagedBean.updateListDroitFonctionnalite()}" update=":formRoles:panelFcts"/>
+                    </p:autoComplete>
+                    
+                    <ui:repeat id="idRepreatMenu" value="#{fonctionnaliteManagedBean.listMenu}" var="mnu">
+                        <p:selectBooleanButton onLabel="#{mnu.libelle}" offLabel="#{mnu.libelle}" value="#{mnu.active}">
+                            <p:ajax listener="#{fonctionnaliteManagedBean.updateMenu(mnu)}" update=":formRoles :formRoles:panelFcts"/>
+                        </p:selectBooleanButton>
+                    </ui:repeat>
+                    
+                </center>
+            </p:panel>
+
+            <p:spacer height="7"/>
+
+            <p:panel id="panelFcts">
+
+                <p:dataTable id="listFonctionnalites" styleClass="ui-datatable-center" value="#{fonctionnaliteManagedBean.listDroitFonctionnalite}" var="fct" paginator="true" rows="15" paginatorPosition="bottom"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" emptyMessage="Aucune fonctionnalité trouvée !!!">
+                    
+                    <p:column rendered="#{fonctionnaliteManagedBean.selectedDroit eq null}" headerText="Rôle" sortBy="#{fct.idDroit.libelle}">
+                        <p:outputLabel value="#{fct.idDroit.libelle}"/>
+                    </p:column>
+                    
+                    <p:column rendered="#{fonctionnaliteManagedBean.selectedMenu eq null}" headerText="Menu" sortBy="#{fct.idFonctionnalite.idMenu.libelle}">
+                        <p:outputLabel value="#{fct.idFonctionnalite.idMenu.libelle}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Fonctionnalité" sortBy="#{fct.idFonctionnalite.libelle}">
+                        <strong><font size="1">
+                                <p:outputLabel value="#{fct.idFonctionnalite.libelle}"/>
+                            </font></strong>
+                    </p:column>
+                    
+                    <p:column headerText="URL" sortBy="#{fct.idFonctionnalite.url}">
+                        <p:outputLabel value="#{fct.idFonctionnalite.url}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Etat" sortBy="#{fct.active}">
+                        <p:selectBooleanButton id="idenabed" value="#{fct.active}" onLabel="Activé" offLabel="Desactivé" onIcon="ui-icon-check" offIcon="ui-icon-close">
+                            <p:ajax listener="#{fonctionnaliteManagedBean.update(fct)}"/>
+                        </p:selectBooleanButton>
+                    </p:column>
+                    
+                    <p:column headerText="Actions">
+                        <p:commandButton id="btnDetails" icon="ui-icon-help" oncomplete="dialogDetails.show();" update=":detailFonctionnaliteForm">
+                            <f:setPropertyActionListener value="#{fct.idFonctionnalite}" target="#{fonctionnaliteManagedBean.selectedFonctionnalite}"/>
+                        </p:commandButton>
+
+                        <p:commandButton id="btnModif" icon="ui-icon ui-icon-search" oncomplete="dialogEdit.show();" update=":editFctForm"
+                                         actionListener="#{fonctionnaliteManagedBean.prepareEdit(fct.idFonctionnalite)}"/>
+
+                        <p:commandButton id="btnSupp" icon="ui-icon ui-icon-trash" oncomplete="confirmation.show();">
+                            <f:setPropertyActionListener value="#{fct.idFonctionnalite}" target="#{fonctionnaliteManagedBean.selectedFonctionnalite}"/>
+                        </p:commandButton>
+                        
+                        <p:tooltip for="btnDetails" value="Détails de la fonctionnalité" showEffect="fade" hideEffect="fade"/>
+                        <p:tooltip for="btnModif" value="Modification de la fonctionnalité" showEffect="fade" hideEffect="fade"/>   
+                        <p:tooltip for="btnSupp" value="Suppression de la fonctionnalité" showEffect="fade" hideEffect="fade"/>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="dialogbox">
+
+        <p:dialog closeOnEscape="true" widgetVar="dialogCreate1" header="Nouvelle fonctionnalité" appendToBody="true" modal="true" draggable="false" resizable="false">
+            <h:form id="createFctForm1">
+                <br/>
+                <p:panelGrid id="panelcreate1" columns="2">
+
+                    <p:outputLabel value="Menu : " for="mnu"/>
+                    <p:selectOneMenu required="true" requiredMessage="Le champ menu est obligatoire !!"  id="mnu" value="#{fonctionnaliteManagedBean.selectedFonctionnalite.idMenu}" label="Menu">
+                        <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                        <f:selectItems value="#{fonctionnaliteManagedBean.listMenu}" var="item1" itemValue="#{item1}" itemLabel="#{item1.libelle}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Libellé : " for="lib"/>
+                    <p:inputText required="true" requiredMessage="Le champ libellé est obligatoire !!" id="lib" value="#{fonctionnaliteManagedBean.selectedFonctionnalite.libelle}" maxlength="45" label="Libellé de la fonctionnalité"/>
+
+                    <p:outputLabel value="URL : " for="url"/>
+                    <p:inputText required="true" requiredMessage="Le champ url est obligatoire !!"  id="url" size="30" value="#{fonctionnaliteManagedBean.selectedFonctionnalite.url}" maxlength="100" label="URL de la fonctionnalité"/>
+
+                    <p:outputLabel value="Description : " for="description"/> 
+                    <p:inputTextarea cols="29" rows="8" id="description" title="Description de la fonctionnalité" maxlength="250" value="#{fonctionnaliteManagedBean.selectedFonctionnalite.description}"/>
+
+                    <p:outputLabel value="Activée pour : "/>
+                    <p:selectCheckboxMenu id="profil" value="#{fonctionnaliteManagedBean.selectedDroits}" label="Profil" filter="true" filterMatchMode="startsWith" style="width: 120px">
+                        <f:selectItems value="#{fonctionnaliteManagedBean.listDroit}" var="item" itemValue="#{item.idDroit}" itemLabel="#{item.libelle}"/>
+                    </p:selectCheckboxMenu>
+
+                </p:panelGrid>
+
+                <br/><br/>
+                <center>
+                    <p:commandButton id="valider" update=":formRoles :formRoles:panelFcts" value="Valider" actionListener="#{fonctionnaliteManagedBean.create()}" oncomplete="dialogCreate1.hide();"/>
+                    <p:commandButton id="annuler" value="Annuler" type="reset" onclick="dialogCreate1.hide();"/>
+
+                    <p:tooltip for="valider" value="Validation" showEffect="fade" hideEffect="fade"/>
+                    <p:tooltip for="annuler" value="Annulation" showEffect="fade" hideEffect="fade"/>
+                </center>
+
+            </h:form>
+        </p:dialog>
+
+        <p:confirmDialog id="confirmDialog" message="Êtes vous sûr de bien vouloir supprimer cette fonctionnalité ?" header="Suppression de la fonctionnalité" severity="alert" widgetVar="confirmation" appendToBody="true">
+            <h:form>
+                <p:commandButton update=":formRoles:listFonctionnalites" id="confirm" oncomplete="confirmation.hide();" value="Oui" actionListener="#{fonctionnaliteManagedBean.destroy()}"/>
+                <p:commandButton id="decline" value="Non" onclick="confirmation.hide();" type="button"/>
+
+                <p:tooltip for="confirm" value="Confirmation" showEffect="fade" hideEffect="fade"/>
+                <p:tooltip for="decline" value="Annulation" showEffect="fade" hideEffect="fade"/>
+            </h:form>
+        </p:confirmDialog>
+
+        <p:dialog closeOnEscape="true" widgetVar="dialogEdit" header="Modification de la fonctionnalité" appendToBody="true" modal="true" draggable="false" resizable="false">
+            <h:form id="editFctForm">
+                <br/>
+                <p:panelGrid id="panelEdit" columns="2">
+
+                    <p:outputLabel value="Menu :" for="mnu"/>
+                    <p:selectOneMenu required="true" requiredMessage="Le champ menu est obligatoire !!"  id="mnu" value="#{fonctionnaliteManagedBean.selectedFonctionnalite.idMenu}" label="Menu">
+                        <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                        <f:selectItems value="#{fonctionnaliteManagedBean.listMenu}" var="item1" itemValue="#{item1}" itemLabel="#{item1.libelle}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Libellé :" for="lib"/>
+                    <p:inputText required="true" requiredMessage="Le champ libellé est obligatoire !!"  id="lib" value="#{fonctionnaliteManagedBean.selectedFonctionnalite.libelle}" maxlength="45" label="Libellé de la fonctionnalité"/>
+
+                    <p:outputLabel value="URL :" for="url"/>
+                    <p:inputText required="true" requiredMessage="Le champ url est obligatoire !!"  id="url" size="30" value="#{fonctionnaliteManagedBean.selectedFonctionnalite.url}" maxlength="100" label="URL de la fonctionnalité"/>
+
+                    <p:outputLabel value="Description :" for="description"/> 
+                    <p:inputTextarea cols="29" rows="8" id="description" title="Description de la fonctionnalité" maxlength="250" value="#{fonctionnaliteManagedBean.selectedFonctionnalite.description}"/>
+
+                </p:panelGrid> 
+                <br/><br/>
+
+                <center>
+                    <p:commandButton id="confirm" value="Valider" ajax="false" actionListener="#{fonctionnaliteManagedBean.update()}" oncomplete="dialogEdit.hide();"/>
+                    <p:commandButton id="decline" value="Annuler" type="reset" onclick="dialogEdit.hide();"/>
+
+                    <p:tooltip for="confirm" value="Confirmation" showEffect="fade" hideEffect="fade"/>
+                    <p:tooltip for="decline" value="Annulation" showEffect="fade" hideEffect="fade"/>
+                </center>
+
+            </h:form>
+        </p:dialog>
+
+        <p:dialog id="detailsDialog" closeOnEscape="true" widgetVar="dialogDetails" header="Détails de la fonctionnalité" appendToBody="true" modal="true" draggable="false" resizable="false">
+            <h:form id="detailFonctionnaliteForm">             
+                <p:panelGrid id="panelDetail1" columns="2" style="font-size: 12px; line-height: 20px">
+
+                    <span style="font-size: 12px;line-height: 20px"><strong>Fonctionnalité : </strong></span>
+                    <br/><p:outputLabel value="#{fonctionnaliteManagedBean.selectedFonctionnalite.libelle}" title="Fonctionnalité"/>
+
+                    <span style="font-size: 12px;line-height: 20px"><strong>URL : </strong></span>
+                    <br/><p:outputLabel value="#{fonctionnaliteManagedBean.selectedFonctionnalite.url}" title="URL"/>
+
+                    <span style="font-size: 12px;line-height: 20px; background-color: white;"><strong>Description : </strong></span>
+                    <h:inputTextarea style="background-color: white; color: #222222; border: 1px solid rgb(0, 103, 139); border-radius: 0;" disabled="true" rows="4" cols="50" value="#{fonctionnaliteManagedBean.selectedFonctionnalite.description}"/>
+
+                </p:panelGrid>
+
+                <center>
+                    <p:commandButton id="btnOk" onclick="dialogDetails.hide();" type="button" value="Ok"/>
+                    <p:tooltip for="btnOk" value="Fermer la fenêtre" showEffect="fade" hideEffect="fade"/>
+                </center>               
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

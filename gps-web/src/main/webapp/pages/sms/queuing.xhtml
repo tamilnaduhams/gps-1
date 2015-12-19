@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/pages/public/SiTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="bodybar">
+        <h:panelGrid columns="1">
+            <h:outputText value="Gestion du queuing Services SMS"/>
+        </h:panelGrid>
+    </ui:define>
+
+    <ui:define name="bodybarRight">
+        <p:commandButton id="addButton" value="Nouveau service" icon="ui-icon-plusthick"  actionListener="#{serviceQueueManagedBean.showErreur()}"   />
+        <pe:tooltip for="addButton" value="Créer un nouveau service queue" showEffect="fadeIn" hideEffect="fadeIn"/>
+    </ui:define>
+
+    <ui:define name="body">
+
+        <h:form id="form">
+            <p:panel id="panellistCollaborateur">
+                <h:panelGrid columns="1" style="text-align: center;width: 100%">
+                    <p:selectOneButton value="#{proprietaireManagedBean.etat}" >
+                        <f:selectItem id="btnTous" itemLabel="Tous les services" itemDescription="Tous les services " itemValue="default" />
+                    </p:selectOneButton>
+
+                </h:panelGrid>
+            </p:panel>
+        </h:form>
+
+        <br/>
+
+        <h:form id="listQueueForm">
+            <p:dataTable id="listQueueDataTable"
+                         value="#{serviceQueueManagedBean.listServicesQ}" emptyMessage="Aucun propriétaire trouvé !!"
+                         paginator="true" rows="20" var="item" paginatorPosition="bottom" styleClass="ui-datatable-center"
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                         sortBy="#{item.ordre}"   sortOrder="ascending"    rowsPerPageTemplate="5,10,20,50,100,200" rowKey="#{item.idServicequeue}">
+
+                <p:column  headerText="Nom de Service">
+                    <h:outputText value="#{item.service.nomService}"/>
+                </p:column>
+
+                <p:column   headerText="Ordre du service">
+                    <h:outputText value="#{item.ordre}"/>
+                </p:column>
+
+                <p:column headerText="Actions" width="50">
+
+                    <p:commandButton id="editButton" icon="ui-icon ui-icon-search" oncomplete="dialogEdit.show()" update=":editUserForm">
+
+                        <f:setPropertyActionListener value="#{item}" target="#{serviceQueueManagedBean.selectedServiceQ}" />
+                    </p:commandButton>
+
+                    <p:commandButton id="deleteButton" icon="ui-icon ui-icon-trash" onclick="confirmation.show();" >
+                        <f:setPropertyActionListener value="#{item}" target="#{serviceQueueManagedBean.selectedServiceQ}" />
+
+                    </p:commandButton>
+
+                    <pe:tooltip for="editButton" value="Editer le service" showEffect="fadeIn" hideEffect="fadeIn"/>
+                    <pe:tooltip for="deleteButton" value="Supprimer le service" showEffect="fadeIn" hideEffect="fadeIn"/>
+
+                </p:column>
+            </p:dataTable>
+
+        </h:form>
+    </ui:define>
+
+
+    <ui:define name="dialogbox">
+
+        <!-- ws -->
+
+        <p:dialog closeOnEscape="true" id="createDialogwsForm"  widgetVar="dialogwsCreate" header="Séléctionner un service" appendToBody="true" modal="true"  resizable="false">
+            <h:form id="createQueueForms">
+                <h:panelGrid columns="3">
+
+                    <h:outputText value="Selectionner un service: " />
+                    <p:selectOneMenu  style="width: 160px;" value="#{serviceQueueManagedBean.selectedServiceQ.idServicequeue}" required="true" requiredMessage="Le champ service est obligatoire !">
+
+                        <f:selectItem  itemLabel="Sélectionnez une"  itemValue="" />
+                        <f:selectItems  value="#{serviceQueueManagedBean.listAdd}"  var="s" itemLabel="#{s.nomService}" itemValue="#{s.idService}" >
+
+                        </f:selectItems>
+
+                    </p:selectOneMenu>
+                    <h:outputText />
+
+                    <h:outputText />
+                    <h:outputText />
+                    <h:outputText />
+
+                    <h:outputText value="Entrer un ordre: " />
+                    <p:inputMask id="oneMenuSelect" mask="9?9999" placeHolder="" value="#{serviceQueueManagedBean.selectedServiceQ.ordre}" required="true" requiredMessage="Le champ ordre est obligatoire !" />
+
+                    <h:outputText />
+
+                    <h:outputText />
+                    <h:outputText />
+
+                    <h:outputText />
+                    <h:outputText />
+
+                    <p:commandButton value="Valider" immediate="false" update=":listQueueForm:listQueueDataTable :createQueueForms"  action="#{serviceQueueManagedBean.create}"  />
+                    <h:outputText />
+
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+
+        <!-- delete Service queue -->
+        <p:confirmDialog id="confirmDialog" message="Êtes vous sûr de bien vouloir supprimer définitivement ce service queue ?"
+                         header="Suppression de ce service" severity="alert" widgetVar="confirmation" appendToBody="true">
+            <h:form>
+                <center>
+                    <p:commandButton id="confirm" value="Oui" update=":listQueueForm :createQueueForms" oncomplete="confirmation.hide()"
+                                     action="#{serviceQueueManagedBean.refresh()}"          actionListener="#{serviceQueueManagedBean.destroy()}"   />
+                    <p:commandButton id="decline" value="Non" onclick="confirmation.hide();" type="button"/>
+                </center>
+                <p:tooltip for="confirm" value="Valider l'opération de suppression de ce service" showEffect="fadeIn" hideEffect="fadeIn"/>
+                <p:tooltip for="decline" value="Annuler l'opération de suppression de ce service" showEffect="fadeIn" hideEffect="fadeIn"/>
+            </h:form>
+        </p:confirmDialog>
+
+        <!-- edit -->
+
+        <p:dialog closeOnEscape="true" id="editDialogForm" widgetVar="dialogEdit" header="Mise à jour de l'ordre du service" appendToBody="true" modal="true"  resizable="false">
+            <h:form id="editUserForm">
+                <p:panelGrid id="panelEdit" columns="2">
+
+                    <p:outputLabel value="Ordre de service : " />
+                    <p:inputMask id="editOrdre" mask="9?9999" placeHolder=""  title="Ordre de service" value="#{serviceQueueManagedBean.selectedServiceQ.ordre}" required="true" requiredMessage="Le champ ordre est obligatoire !" />
+
+                </p:panelGrid>
+
+                <br/>
+                <p:separator/>
+                <center>
+                    <p:commandButton id="valider" immediate="false" value="Valider" actionListener="#{serviceQueueManagedBean.update()}" update=":listQueueForm:listQueueDataTable :editUserForm"/>
+                    <p:commandButton id="annuler" value="Annuler" type="reset" onclick="dialogEdit.hide();"/>
+
+                    <pe:tooltip for="valider" value="Valider l'opération de modification de ce service" showEffect="fadeIn" hideEffect="fadeIn"/>
+                    <pe:tooltip for="annuler" value="Annuler l'opération de modification de ce service" showEffect="fadeIn" hideEffect="fadeIn"/>
+                </center>
+
+            </h:form>
+        </p:dialog>
+
+
+    </ui:define>
+</ui:composition>

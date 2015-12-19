@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/pages/public/SiTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"> 
+    
+    <ui:define name="title">
+        <h:outputText value="Gps"></h:outputText>
+    </ui:define>
+    
+    <ui:define name="bodybar">
+        <h:panelGrid columns="1">
+            <h:outputText value="Accès refusé !!!"/>
+        </h:panelGrid>
+    </ui:define>
+    
+    <ui:define name="body">
+        <h:form id="formPanneau">
+            <p:panel header="Erreur" style="height:413px;">
+                <p:outputLabel value="Vous n'êtes pas autorisé à accéder à cette page !!!" style="font-size: 200%; color: red;"/>
+            </p:panel>
+        </h:form>
+    </ui:define>
+    
+</ui:composition>

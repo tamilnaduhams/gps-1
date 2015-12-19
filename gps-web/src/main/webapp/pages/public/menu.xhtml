@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" > 
+
+    <p:panelMenu id="panelMenuList" style="margin-top:5px;">
+        
+        <p:submenu id="carte" label="Carte" rendered="#{login.isConnectedUserAllowed(pagelistmanagedbean.prepareCarteVehicules()) or login.isConnectedUserAllowed(pagelistmanagedbean.prepareItinerairesVoitures())}">
+            
+            <p:menuitem icon="ui-icon-person" value="Tous les véhicules" rendered="#{login.isConnectedUserAllowed(pagelistmanagedbean.prepareCarteVehicules())}" url="#{pagelistmanagedbean.prepareCarteVehicules()}" />
+            <p:menuitem icon="ui-icon-person" value="Itinéraire des véhicules" rendered="#{login.isConnectedUserAllowed(pagelistmanagedbean.prepareItinerairesVoitures())}" url="#{pagelistmanagedbean.prepareItinerairesVoitures()}" />
+        
+        </p:submenu>
+        
+        <p:submenu id="vehicules" label="Véhicules" rendered="#{login.isConnectedUserAllowed(pagelistmanagedbean.prepareVehicules())}">
+            
+            <p:menuitem icon="ui-icon-person" value="Listes des véhicules" rendered="#{login.isConnectedUserAllowed(pagelistmanagedbean.prepareVehicules())}" url="#{pagelistmanagedbean.prepareVehicules()}" />
+            <p:menuitem icon="ui-icon-person" value="Programmes d'entretiens" rendered="#{login.isConnectedUserAllowed(pagelistmanagedbean.prepareEntretiens())}" url="#{pagelistmanagedbean.prepareEntretiens()}" />
+        
+        </p:submenu>
+        
+        <p:submenu id="boitier" label="Boitiers" rendered="#{login.isConnectedUserAllowed(pagelistmanagedbean.prepareBoitiers())}">
+            
+            <p:menuitem icon="ui-icon-person" value="Liste des boitiers" rendered="#{login.isConnectedUserAllowed(pagelistmanagedbean.prepareBoitiers())}" url="#{pagelistmanagedbean.prepareBoitiers()}" />
+        
+        </p:submenu>
+        
+        <p:submenu id="chauffeurs" label="Chauffeurs" rendered="#{login.isConnectedUserAllowed(pagelistmanagedbean.prepareChauffeurs())}">
+            
+            <p:menuitem icon="ui-icon-person" value="Liste des chauffeurs" rendered="#{login.isConnectedUserAllowed(pagelistmanagedbean.prepareChauffeurs())}" url="#{pagelistmanagedbean.prepareChauffeurs()}" />
+        
+        </p:submenu>
+
+        <p:submenu id="conf" label="Configuration" rendered="#{login.isConnectedUserAllowed(pagelistmanagedbean.prepareProfil()) or login.isConnectedUserAllowed(pagelistmanagedbean.prepareUtilisateur()) or login.isConnectedUserAllowed(pagelistmanagedbean.prepareGeneralSettings()) or login.isConnectedUserAllowed(pagelistmanagedbean.prepareFonctionnalites()) or login.isConnectedUserAllowed(menuManagedBean.prepareList()) or login.isConnectedUserAllowed(droitManagedBean.prepareList())}">
+            
+            <p:menuitem icon="ui-icon-person" value="Utilisateurs" rendered="#{login.isConnectedUserAllowed(pagelistmanagedbean.prepareUtilisateur())}" url="#{pagelistmanagedbean.prepareUtilisateur()}" styleClass="#{pagelistmanagedbean.pageUri.equals( '/gps-web/pages/configuration/Utilisateurs.xhtmls' )? 'marqued' : null}"/>
+        
+            <p:menuitem icon="ui-icon-image" value="Profil" rendered="#{login.isConnectedUserAllowed(pagelistmanagedbean.prepareProfil())}" url="#{pagelistmanagedbean.prepareProfil()}" styleClass="#{pagelistmanagedbean.pageUri.equals('/gps-web/pages/configuration/configuration.xhtmls') ? 'marqued' : null}"/>
+            
+            <p:menuitem icon="ui-icon-wrench" value="Fonctionnalités" rendered="#{login.isConnectedUserAllowed(fonctionnaliteManagedBean.prepareList())}" url="#{pagelistmanagedbean.prepareFonctionnalites()}" styleClass="#{pagelistmanagedbean.pageUri.equals('/gps-web/pages/configuration/Fonctionnalites.xhtmls')? 'marqued' : null}"/>
+            
+            <p:menuitem icon="ui-icon-link" value="Menus" rendered="#{login.isConnectedUserAllowed(menuManagedBean.prepareList())}" url="#{menuManagedBean.prepareList()}" ajax="true" styleClass="#{pagelistmanagedbean.pageUri.equals( '/gps-web/pages/configuration/Menus.xhtmls' )? 'marqued' : null}"/>
+            
+            <p:menuitem icon="ui-icon-flag" value="Rôles" rendered="#{login.isConnectedUserAllowed(droitManagedBean.prepareList())}" url="#{droitManagedBean.prepareList()}" ajax="true" styleClass="#{pagelistmanagedbean.pageUri.equals( '/gps-web/pages/configuration/Roles.xhtmls' )? 'marqued' : null}"/>
+        
+            <p:menuitem icon="ui-icon-gear" value="Configuration générale" rendered="#{login.isConnectedUserAllowed(pagelistmanagedbean.prepareGeneralSettings())}" url="#{pagelistmanagedbean.prepareGeneralSettings()}" ajax="true" styleClass="#{pagelistmanagedbean.pageUri.equals('/gps-web/pages/configuration/GeneralSettings.xhtmls')? 'marqued' : null}"/>
+            
+        </p:submenu>
+        
+        <p:submenu id="sms" label="Service SMS" >
+            
+            <p:menuitem icon="ui-icon-wrench" value="Gestion des Services"  url="/pages/sms/service.xhtml" styleClass="#{pagelistmanagedbean.pageUri.equals('/pages/sms/service.xhtmls')? 'marqued' : null}"/>
+            <p:menuitem icon="ui-icon-wrench" value="Gestion des Queuing"  url="/pages/sms/queuing.xhtml" styleClass="#{pagelistmanagedbean.pageUri.equals('/pages/sms/queuing.xhtmls')? 'marqued' : null}"/>
+            <p:menuitem icon="ui-icon-mail-closed" value="Envoi de SMS"  url="/pages/sms/send.xhtml" styleClass="#{pagelistmanagedbean.pageUri.equals('/pages/sms/send.xhtmls')? 'marqued' : null}"/>
+            <p:menuitem icon="ui-icon-mail-open" value="Gestion des SMS"  url="/pages/sms/gestionsms.xhtml" styleClass="#{pagelistmanagedbean.pageUri.equals('/pages/sms/gestionsms.xhtmls')? 'marqued' : null}"/>
+        
+        </p:submenu>
+        
+        
+        
+        
+        
+        
+
+    </p:panelMenu>
+
+</ui:composition>

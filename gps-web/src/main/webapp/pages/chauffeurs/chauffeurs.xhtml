@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/pages/public/SiTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions"> 
+
+    <ui:define name="title">
+
+        <h:outputText value="Gps"></h:outputText>
+
+    </ui:define>
+
+    <ui:define name="bodybar">
+
+        <h:panelGrid columns="1" dir="#{login.dir}">
+            <h:outputText value="Chauffeurs"/>
+        </h:panelGrid>
+
+    </ui:define>
+
+    <ui:define name="bodybarRight">
+
+        <p:commandButton icon="ui-icon-plusthick" id="btnNouvChauffeur" action="#{chauffeurManagedBean.prepareCreate()}"
+                         value="Nouveau chauffeur" update=":createChauffeurForm" oncomplete="createChauffeurWidget.show();">
+        </p:commandButton>
+
+        <p:tooltip for="btnNouvChauffeur" value="Ajout d'un nouveau chauffeur" showEffect="fade" hideEffect="fade"/>
+
+    </ui:define>
+
+    <ui:define name="body">
+
+        <h:form id="formChauffeur">
+
+            <p:spacer height="10"/>
+            <p:panel>
+                <p:dataTable id="listChauffeur" styleClass="ui-datatable-center" value="#{chauffeurManagedBean.listChauffeur}" var="item" 
+                             paginator="true" rows="10" paginatorPosition="bottom"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" 
+                             emptyMessage="Aucun chauffeur trouvé !!!">
+
+                    <p:column headerText="Nom" sortBy="#{item.nom}">
+                        <h:outputText value="#{item.nom}"/>
+                    </p:column>
+
+                    <p:column headerText="Prénom" sortBy="#{item.prenom}">
+                        <h:outputText value="#{item.prenom}"/>
+                    </p:column>
+                                     
+
+                    <p:column headerText="Téléphone" sortBy="#{item.telephone}">
+                        <h:outputText value="#{item.telephone}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Actions" width="50">
+
+                        <p:commandButton icon="ui-icon ui-icon-search" update=":createChauffeurForm" id="btnDetails" oncomplete="createChauffeurWidget.show();"> 
+                            <f:setPropertyActionListener value="#{item}" target="#{chauffeurManagedBean.selectedChauffeur}"/>
+                        </p:commandButton>
+
+                        <p:commandButton icon="ui-icon ui-icon-trash" id="btnSupp" oncomplete="confirmation.show();">     
+                            <f:setPropertyActionListener value="#{item}" target="#{chauffeurManagedBean.selectedChauffeur}"/>
+                        </p:commandButton>
+
+                        <p:tooltip for="btnDetails" value="Modifier le chauffeur" showEffect="fade" hideEffect="fade"/>
+                        <p:tooltip for="btnSupp" value="Supprimer le chauffeur" showEffect="fade" hideEffect="fade"/>
+                    </p:column>
+
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+    </ui:define>
+
+    <ui:define  name="dialogbox">
+
+        <p:confirmDialog id="confirmations" message="Êtes vous sûr de bien vouloir procéder à la suppression de ce chauffeur ?"  
+                         header="Suppression du chauffeur" severity="alert" widgetVar="confirmation" appendToBody="true">  
+            <h:form>
+
+                <p:commandButton id="confirm" value="Oui" update=":formChauffeur:listChauffeur" oncomplete="confirmation.hide()"  
+                                 actionListener="#{chauffeurManagedBean.destroy()}" ajax="false"/>
+
+                <p:commandButton id="decline" value="Non" onclick="confirmation.hide();" type="button"/>
+
+                <p:tooltip for="confirm" value="Valider" showEffect="fade" hideEffect="fade"/>
+                <p:tooltip for="decline" value="Annuler" showEffect="fade" hideEffect="fade"/>
+
+            </h:form>
+        </p:confirmDialog>
+
+        <p:dialog closeOnEscape="true" resizable="false" id="createChauffeur" appendToBody="true" closable="true" header="Véhicule" widgetVar="createChauffeurWidget" modal="true">
+            <h:form id="createChauffeurForm">
+
+                <p:panelGrid id="panelCreate" columns="2">
+
+                    <p:outputLabel value="Nom : " for="nom"/>
+                    <p:inputText id="nom" required="true" requiredMessage="Le champs nom Chauffeur est obligatoire !!!" value="#{chauffeurManagedBean.selectedChauffeur.nom}" title="Nom du chauffeur"/>
+
+                    <p:outputLabel value="Prénom : " for="kr"/>
+                    <p:inputText id="kr" required="true" requiredMessage="Le champs prénom Chauffeur est obligatoire !!!" value="#{chauffeurManagedBean.selectedChauffeur.prenom}" title="Prénom du chauffeur"/>
+
+                    <p:outputLabel value="Téléphone : " for="tel"/>
+                    <p:inputText id="tel" value="#{chauffeurManagedBean.selectedChauffeur.telephone}" title="Téléphone du chauffeur"/>
+
+                </p:panelGrid>
+                <center>
+                    <p:commandButton id="btnValider" immediate="false" value="Valider" actionListener="#{chauffeurManagedBean.save()}" update=":formChauffeur:listChauffeur"/>
+                    <p:commandButton id="btnAnnuler" value="Annuler" type="reset" onclick="createChauffeurWidget.hide();"/>
+
+                    <p:tooltip for="btnValider" value="Valider" showEffect="fade" hideEffect="fade"/>
+                    <p:tooltip for="btnAnnuler" value="Annuler" showEffect="fade" hideEffect="fade"/>
+                </center>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

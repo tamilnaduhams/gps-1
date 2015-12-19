@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+   
+    <http use-expressions="true" auto-config="true" access-denied-page="/deniedAccess.xhtml">
+        <intercept-url pattern="/login.xhtml" filters="none"/>
+        <intercept-url pattern="/404.xhtml" filters="none"/>
+        <intercept-url pattern="/deniedAccess.xhtml" filters="none"/>
+        <form-login login-page="/login.xhtml" default-target-url="/pages/carte/vehicules.xhtml" authentication-failure-url="/login.xhtml?state=failure"/>
+        <logout  logout-success-url="/login.xhtml?state=logout" />
+        <custom-filter before="FILTER_SECURITY_INTERCEPTOR" ref="filter"/>
+    </http>
+    
+    <beans:bean id="filter" class="com.gps.beans.GpsFilterSecurityInterceptor">
+        <beans:property name="authenticationManager" ref="authenticationManager"/>
+        <beans:property name="accessDecisionManager" ref="accessDecisionManager"/>
+        <beans:property name="gpsFilterSecurityMetadataSource" ref="gpsFilterSecurityMetadataSource"/>
+    </beans:bean>
+    
+    <beans:bean id="gpsFilterSecurityMetadataSource" class="com.gps.beans.GpsFilterSecurityMetadataSource"/>
+    <beans:bean id="accessDecisionManager" class="com.gps.beans.GpsAccessDecisionManager"/>
+    <beans:bean id="gpsUserDetailsService" class = "com.gps.beans.GpsUserDetailsService" />  
+    
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider user-service-ref="gpsUserDetailsService">
+            <password-encoder hash="md5"/>
+        </authentication-provider>
+    </authentication-manager>
+
+</beans:beans>

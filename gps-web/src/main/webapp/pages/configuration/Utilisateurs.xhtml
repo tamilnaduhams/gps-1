@@ -1,0 +1,215 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/pages/public/SiTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions"> 
+
+    <ui:define name="title">
+        <h:outputText value="Gps"></h:outputText>
+    </ui:define>
+    
+    <ui:define name="bodybar">
+        <h:panelGrid columns="1" dir="#{login.dir}">
+            <h:outputText value="Collaborateur"/>
+        </h:panelGrid>
+    </ui:define>
+    
+    <ui:define name="bodybarRight">
+        <p:commandButton id="addButton" value="Nouveau" icon="ui-icon-plusthick" action="#{utilisateurManagedBean.prepareCreate()}" oncomplete="dialogCreate.show();" update=":createUserForm" />
+        <p:tooltip for="addButton" value="Nouveau utilisateur" showEffect="fade" hideEffect="fade"/>
+    </ui:define>
+    
+    <ui:define name="body">
+        <p:spacer height="10"/>
+        
+        <h:form id="listCollaborateurForm">
+            <p:dataTable id="listCollaborateurDataTable"
+                         value="#{utilisateurManagedBean.listUtilisateur}" emptyMessage="Aucun collaborateur trouvé."
+                         paginator="true" rows="10" var="item" paginatorPosition="bottom" styleClass="ui-datatable-center" 
+                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+
+                <p:column style="width: 50px;" headerText="Avatar">
+                    <h:graphicImage id="foto" url="#{utilisateurManagedBean.findAvatar(item)}" style="max-width: 30px;max-height: 30px;"/>
+                </p:column>
+
+                <p:column sortBy="#{item.prenom}" headerText="Prénom">
+                    <h:outputText value="#{item.prenom}"/>
+                </p:column>
+
+                <p:column sortBy="#{item.nom}" headerText="Nom">
+                    <h:outputText value="#{item.nom}"/>
+                </p:column>
+
+                <p:column sortBy="#{item.dateNaissance}" headerText="Date de naissance">
+                    <h:outputText value="#{item.dateNaissance}">
+                        <f:convertDateTime timeZone="#{defaultTimeZone.timeZone}" pattern="dd/MM/yyyy"/>
+                    </h:outputText>
+                </p:column>
+
+                <p:column sortBy="#{item.adresse}" headerText="Adresse">
+                    <h:outputText value="#{item.adresse}"/>
+                </p:column>
+
+                <p:column sortBy="#{item.mobile}" headerText="Mobile">
+                    <h:outputText value="#{item.mobile}"/>
+                </p:column>
+
+                <p:column sortBy="#{item.email}" headerText="E-mail">
+                    <h:outputText value="#{item.email}"/>
+                </p:column>                
+
+                <p:column headerText="Etat" sortBy="#{item.enabled}">
+                    <p:selectBooleanButton id="etat" value="#{item.enabled}" offLabel="Desactivé" onLabel="Activé" onIcon="ui-icon-check" offIcon="ui-icon-close" >
+                        <p:ajax listener="#{utilisateurManagedBean.disableUtilisateur(item)}" event="change" update=":listCollaborateurForm" />
+                    </p:selectBooleanButton>
+                </p:column>
+                
+                <p:column headerText="Actions" width="50">
+                    
+                    <p:commandButton id="editButton" icon="ui-icon ui-icon-search" oncomplete="dialogEdit.show()" actionListener="#{utilisateurManagedBean.prepareEdit(item)}" update=":editUserForm" />
+                    
+                    <p:commandButton disabled="#{item.enabled == 'true'}" id="deleteButton" icon="ui-icon ui-icon-trash" onclick="confirmation.show()">
+                        <f:setPropertyActionListener value="#{item}" target="#{utilisateurManagedBean.selectedUtilisateur}"/>
+                    </p:commandButton>
+                    
+                    <!--<p:commandButton id="detailsButton" icon="ui-icon-help" oncomplete="wiz11.loadStep(wiz11.cfg.steps[0], true);" onclick="dialogWizardDetails.show()">
+                        <f:setPropertyActionListener value="#{item}" target="#{utilisateurManagedBean.selectedUtilisateur}"/>
+                    </p:commandButton>-->
+
+                    <p:tooltip for="editButton" value="Modifier" showEffect="fade" hideEffect="fade"/>
+                    <p:tooltip for="deleteButton" value="Supprimer" showEffect="fade" hideEffect="fade"/>
+                    <!--<p:tooltip for="detailsButton" value="Détails" showEffect="fade" hideEffect="fade"/>-->
+
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="dialogbox">
+        <p:confirmDialog id="confirmDialog" message="Êtes vous sûr de bien vouloir supprimer cet utilisateur ?"  
+                         header="Processus de suppression" severity="alert" widgetVar="confirmation" appendToBody="true">  
+            <h:form>
+                <p:commandButton id="confirm" value="Oui" update=":listCollaborateurForm" oncomplete="confirmation.hide()"  
+                                 actionListener="#{utilisateurManagedBean.destroy()}"/>  
+                <p:commandButton id="decline" value="Non" onclick="confirmation.hide();" type="button"/>   
+            </h:form>
+        </p:confirmDialog>
+
+        <p:dialog closeOnEscape="true" id="createDialogForm" widgetVar="dialogCreate" header="Nouveau utilisateur" appendToBody="true" modal="true" draggable="false" resizable="false">
+            <h:form id="createUserForm">
+                <br/>
+                <p:panelGrid id="panelcreate" columns="2">
+
+                    <p:outputLabel value="Prénom : " for="prenom"/> 
+                    <p:inputText id="prenom" title="Prénom" value="#{utilisateurManagedBean.selectedUtilisateur.prenom}" required="true" requiredMessage="Le champ prénom est obligatoire !" />
+
+                    <p:outputLabel value="Nom : " for="nom"/> 
+                    <p:inputText id="nom" title="Nom" value="#{utilisateurManagedBean.selectedUtilisateur.nom}" required="true" requiredMessage="Le champ nom est obligatoire !" />
+
+                    <p:outputLabel value="Genre : " for="genre"/>
+                    <p:selectOneMenu id="genre"  style="width: 100%;" value="#{utilisateurManagedBean.selectedUtilisateur.genre}" label="Genre" required="true" requiredMessage="Le champ genre est obligatoire !!">
+                        <f:selectItem itemLabel="--" itemValue="#{null}"/>
+                        <f:selectItem itemLabel="Homme" itemValue="#{true}"/>
+                        <f:selectItem itemLabel="Femme" itemValue="#{false}"/>
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel value="Date de naissance : " for="dateNaiss"/>
+                    <p:calendar title="Date de naissance" id="dateNaiss" required="true" requiredMessage="Le champ date de naissance est obligatoire !" locale="fr" value="#{utilisateurManagedBean.selectedUtilisateur.dateNaissance}" pattern="dd/MM/yyyy"/>
+
+                    <p:outputLabel value="Adresse : " for="adresse"/>
+                    <p:inputTextarea id="adresse" value="#{utilisateurManagedBean.selectedUtilisateur.adresse}" required="true" requiredMessage="Le champ adresse est obligatoire !" maxlength="100" label="Adresse"/>
+
+                    <p:outputLabel value="Mobile : " for="mobile"/>
+                    <p:inputText id="mobile" value="#{utilisateurManagedBean.selectedUtilisateur.mobile}" required="true" requiredMessage="Champ mobile oblogatoire!" maxlength="13" label="Mobile"/>
+
+                    <p:outputLabel value="E-mail : " for="email"/>
+                    <p:inputText id="email" validatorMessage="Mail non valide!!" required="true" requiredMessage="Champ email oblogatoire!" value="#{utilisateurManagedBean.selectedUtilisateur.email}" maxlength="45" label="Email">
+                        <f:validateRegex pattern="([^.@]+)(\.[^.@]+)*@([^.@]+\.)+([^.@]+)"/>
+                    </p:inputText>
+                    
+                    <p:outputLabel value="Identifiant : " for="login"/>
+                    <p:inputText id="login" value="#{utilisateurManagedBean.selectedUtilisateur.identifiant}" required="true" requiredMessage="Champ identifiant oblogatoire!" maxlength="50" label="Login"/>
+                    
+                    <p:outputLabel value="Mot de passe : " for="motPasse"/>
+                    <p:password id="motPasse" value="#{utilisateurManagedBean.newPassWord}" required="true" requiredMessage="Champ nouveau mot de passe oblogatoire!" maxlength="45" label="MotPasse" redisplay="true" feedback="true" promptLabel="Entrez votre mot de passe" weakLabel="Faible" goodLabel="Moyen" strongLabel="Fort"/>
+                    
+                    <p:outputLabel value="Confirmation du mot de passe : " for="motdePasse"/>
+                    <p:password id="motdePasse" value="#{utilisateurManagedBean.confPassWord}"  required="true" requiredMessage="Champ confirmation mot de passe oblogatoire!" maxlength="45" label="MotPasse" redisplay="true" feedback="true" promptLabel="Confirmer votre mot de passe" weakLabel="Faible" goodLabel="Moyen" strongLabel="Fort"/>
+                    
+                    <p:outputLabel value="Rôle : " for="idRole"/>
+                    <p:selectOneMenu id="idRole" style="width: 100%;" value="#{utilisateurManagedBean.selectedUtilisateur.idDroit}" label="Droit" required="true" requiredMessage="Champ droit oblogatoire !!">
+                        <f:selectItem itemLabel="--" itemValue="#{null}"/>
+                        <f:selectItems value="#{droitManagedBean.listDroit}" var="item2" itemValue="#{item2}" itemLabel="#{item2.libelle}"/>
+                    </p:selectOneMenu>
+                    
+                </p:panelGrid>
+
+                <br/><br/>
+                <center>
+                    <p:commandButton id="valider" value="Valider" actionListener="#{utilisateurManagedBean.create()}" ajax="false" oncomplete="dialogCreate.hide();" update=":listCollaborateurForm:listCollaborateurDataTable"/>
+                    <p:commandButton id="annuler" value="Annuler" type="reset" onclick="dialogCreate.hide();"/>
+
+                    <p:tooltip for="valider" value="Validation" showEffect="fade" hideEffect="fade"/>
+                    <p:tooltip for="annuler" value="Annulation" showEffect="fade" hideEffect="fade"/>
+                </center>
+
+            </h:form>
+        </p:dialog>
+
+        <p:dialog closeOnEscape="true" id="editDialogForm" widgetVar="dialogEdit" header="Modification de l'utilisateur" appendToBody="true" modal="true" draggable="false" resizable="false">
+            <h:form id="editUserForm">
+                <br/>
+                <p:panelGrid id="panelEdit" columns="2">
+
+                    <p:outputLabel value="Prénom : " for="prenom"/> 
+                    <p:inputText id="prenom" title="Prénom" value="#{utilisateurManagedBean.selectedUtilisateur.prenom}" required="true" requiredMessage="Le champ prénom est obligatoire !" />
+
+                    <p:outputLabel value="Nom : " for="nom"/> 
+                    <p:inputText id="nom" title="Nom" value="#{utilisateurManagedBean.selectedUtilisateur.nom}" required="true" requiredMessage="Le champ nom est obligatoire !" />
+
+                    <p:outputLabel value="Genre : " for="genre"/>
+                    <p:selectOneMenu id="genre"  style="width: 100%;" value="#{utilisateurManagedBean.selectedUtilisateur.genre}" label="Genre" required="true" requiredMessage="Le champ genre est obligatoire !!">
+                        <f:selectItem itemLabel="--" itemValue="#{null}"/>
+                        <f:selectItem itemLabel="Homme" itemValue="#{true}"/>
+                        <f:selectItem itemLabel="Femme" itemValue="#{false}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Date de naissance : " for="dateNaiss"/>
+                    <p:calendar title="Date de naissance" id="dateNaiss" required="true" requiredMessage="Le champ date de naissance est obligatoire !" locale="fr" value="#{utilisateurManagedBean.selectedUtilisateur.dateNaissance}" pattern="dd/MM/yyyy"/>
+
+                    <p:outputLabel value="Adresse : " for="adresse"/>
+                    <p:inputTextarea id="adresse" value="#{utilisateurManagedBean.selectedUtilisateur.adresse}" required="true" requiredMessage="Le champ date de naissance est obligatoire !" maxlength="100" label="Adresse"/>
+
+                    <p:outputLabel value="Mobile : " for="mobile"/>
+                    <p:inputText id="mobile" value="#{utilisateurManagedBean.selectedUtilisateur.mobile}" required="true" requiredMessage="Champ mobile oblogatoire!" maxlength="13" label="Mobile"/>
+
+                    <p:outputLabel value="E-mail : " for="email"/>
+                    <p:inputText id="email" validatorMessage="Mail non valide!!" required="true" requiredMessage="Champ email oblogatoire!" value="#{utilisateurManagedBean.selectedUtilisateur.email}" maxlength="45" label="Email">
+                        <f:validateRegex pattern="([^.@]+)(\.[^.@]+)*@([^.@]+\.)+([^.@]+)"/>
+                    </p:inputText>
+                    
+                    <p:outputLabel value="Rôle : " for="idRole"/>
+                    <p:selectOneMenu id="idRole" style="width: 100%;" value="#{utilisateurManagedBean.selectedUtilisateur.idDroit}" label="Droit" required="true" requiredMessage="Champ droit oblogatoire !!">
+                        <f:selectItem itemLabel="--" itemValue="#{null}"/>
+                        <f:selectItems value="#{droitManagedBean.listDroit}" var="item2" itemValue="#{item2}" itemLabel="#{item2.libelle}"/>
+                    </p:selectOneMenu>
+                    
+                </p:panelGrid>
+
+                <br/><br/>
+                <center>
+                    <p:commandButton id="valider" value="Valider" actionListener="#{utilisateurManagedBean.update()}" oncomplete="dialogEdit.hide();" update=":listCollaborateurForm"/>
+                    <p:commandButton id="annuler" value="Annuler" type="reset" onclick="dialogEdit.hide();"/>
+
+                    <p:tooltip for="valider" value="Validation" showEffect="fade" hideEffect="fade"/>
+                    <p:tooltip for="annuler" value="Annulation" showEffect="fade" hideEffect="fade"/>
+                </center>
+
+            </h:form>        
+        </p:dialog>
+
+    </ui:define>
+</ui:composition>

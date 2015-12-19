@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <persistence-unit name="gpsPU" transaction-type="JTA">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <jta-data-source>jdbc/gps</jta-data-source>
+    <class>com.gps.entities.GeneralSettings</class>
+    <class>com.gps.entities.Chauffeur</class>
+    <class>com.gps.entities.VehiculeConsommation</class>
+    <class>com.gps.entities.Fonctionnalite</class>
+    <class>com.gps.entities.Vehicule</class>
+    <class>com.gps.entities.EntretienVoiture</class>
+    <class>com.gps.entities.VehiculePosition</class>
+    <class>com.gps.entities.Menu</class>
+    <class>com.gps.entities.DroitFonctionnalite</class>
+    <class>com.gps.entities.Utilisateur</class>
+    <class>com.gps.entities.SuiviKilométrique</class>
+    <class>com.gps.entities.Droit</class>
+    <class>com.gps.entities.Boitier</class>
+    <class>com.gps.entities.VehiculeBoitier</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties>
+      <property name="hibernate.show_sql" value="true"/>
+      <property name="hibernate.format_sql" value="true"/>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+    </properties>
+  </persistence-unit>
+</persistence>

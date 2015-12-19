@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/pages/public/SiTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"> 
+
+    <ui:define name="title">
+
+        <h:outputText value="Gps"></h:outputText>
+
+    </ui:define>
+
+    <ui:define name="bodybar">
+
+        <h:panelGrid columns="1" dir="#{login.dir}">
+            <h:outputText value="Menus"/>
+        </h:panelGrid>
+
+    </ui:define>
+
+    <ui:define name="bodybarRight">
+
+        <p:commandButton icon="ui-icon-plusthick" id="btnNouvMenu" action="#{menuManagedBean.prepareCreate()}"
+                         value="Nouveau menu" update=":createMenuForm" onclick="createMenuWidget.show();"/>
+
+        <p:tooltip for="btnNouvMenu" value="Ajout d'un nouveau menu" showEffect="fade" hideEffect="fade"/>
+
+    </ui:define>
+
+    <ui:define name="body">
+
+        <h:form id="formMenu">
+
+            <p:spacer height="10"/>
+            <p:panel>
+                <p:dataTable id="listMenu" styleClass="ui-datatable-center" value="#{menuManagedBean.listMenu}" var="item" paginator="true" rows="10" paginatorPosition="bottom"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" emptyMessage="Aucun menu trouvé !!!">
+
+                    <p:ajax event="rowToggle" listener="#{menuManagedBean.onRowToggle}"/> 
+
+                    <p:column style="width: 10px">
+                        <p:rowToggler/>
+                    </p:column>
+
+                    <p:column headerText="Menu" sortBy="#{item.libelle}">
+                        <h:outputText value="#{item.libelle}"/>
+                    </p:column>
+
+                    <p:column headerText="Actions" width="50">
+
+                        <p:commandButton icon="ui-icon ui-icon-search" update=":createMenuForm" id="btnDetails" oncomplete="createMenuWidget.show();"> 
+                            <f:setPropertyActionListener value="#{item}" target="#{menuManagedBean.selectedMenu}"/>
+                        </p:commandButton>
+
+                        <p:commandButton icon="ui-icon ui-icon-trash" id="btnSupp" oncomplete="confirmation.show();">     
+                            <f:setPropertyActionListener value="#{item}" target="#{menuManagedBean.selectedMenu}"/>
+                        </p:commandButton>
+
+                        <p:tooltip for="btnDetails" value="Modification du menu" showEffect="fade" hideEffect="fade"/>
+                        <p:tooltip for="btnSupp" value="Suppression du menu" showEffect="fade" hideEffect="fade"/>
+
+                    </p:column>
+
+                    <p:rowExpansion>
+                        <p:dataTable styleClass="mystyle ui-datatable-center" rowStyleClass="histTab" 
+                                     value="#{menuManagedBean.listFonctionnalite}" var="fct" id="hists"
+                                     emptyMessage="Aucune fonctionnalité pour ce menu !!!" 
+                                     paginator="true" rows="5" paginatorPosition="bottom" rowsPerPageTemplate="10,20,50"
+                                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+
+                            <f:facet name="header">
+                                Fonctionnalités
+                            </f:facet>
+
+                            <p:column headerText="Fonctionnalité" sortBy="#{fct.libelle}">
+                                <h:outputText value="#{fct.libelle}">
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="URL" sortBy="#{fct.url}">
+                                <h:outputText value="#{fct.url}">
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="Description" sortBy="#{fct.description}">
+                                <h:outputText value="#{fct.description}">
+                                </h:outputText>
+                            </p:column>
+
+                        </p:dataTable>
+                    </p:rowExpansion>
+
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+    </ui:define>
+
+    <ui:define  name="dialogbox">
+
+        <p:confirmDialog id="confirmations" message="Êtes vous sûr de bien vouloir procéder à la suppression de ce menu ?"  
+                         header="Suppression du menu" severity="alert" widgetVar="confirmation" appendToBody="true">  
+            <h:form>
+
+                <p:commandButton id="confirm" value="Oui" update=":formMenu:listMenu" oncomplete="confirmation.hide()"  
+                                 actionListener="#{menuManagedBean.destroy()}" ajax="false"/>
+
+                <p:commandButton id="decline" value="Non" onclick="confirmation.hide();" type="button"/>
+
+                <p:tooltip for="confirm" value="Valider" showEffect="fade" hideEffect="fade"/>
+                <p:tooltip for="decline" value="Annuler" showEffect="fade" hideEffect="fade"/>
+
+            </h:form>
+        </p:confirmDialog>
+
+        <p:dialog closeOnEscape="true" resizable="false" id="createMenu" appendToBody="true" closable="true" header="Menu" widgetVar="createMenuWidget" modal="true">
+            <h:form id="createMenuForm">
+
+                <p:panelGrid id="panelCreate" columns="2">
+
+                    <p:outputLabel value="Menu :" for="menu"/>                    
+                    <p:inputText id="menu" required="true" requiredMessage="Le champs menu est obligatoire !!!" value="#{menuManagedBean.selectedMenu.libelle}" title="Libellé du menu"/>
+
+                </p:panelGrid>
+                <p:commandButton id="btnValider" ajax="false" value="Valider" actionListener="#{menuManagedBean.save()}"/>
+                <p:commandButton id="btnAnnuler" value="Annuler" type="reset" onclick="createMenuWidget.hide();"/>
+
+                <p:tooltip for="btnValider" value="Valider" showEffect="fade" hideEffect="fade"/>
+                <p:tooltip for="btnAnnuler" value="Annuler" showEffect="fade" hideEffect="fade"/>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/pages/public/SiTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui" 
+                xmlns:h="http://java.sun.com/jsf/html">
+    
+    <ui:define name="title">
+        <h:outputText value="Gps"></h:outputText>
+    </ui:define>
+    
+    <ui:define name="bodybar">
+        <h:panelGrid columns="1" dir="#{login.dir}">
+            <h:outputText value="Profil"/>
+        </h:panelGrid>
+    </ui:define>
+    
+    <ui:define name="body">
+        <h:form id="formAvatar" enctype="multipart/form-data">
+            <p:panel id="personal" header="Avatar">
+                <h:panelGrid columns="5">
+
+                    <h:graphicImage width="70" id="foto" url="#{utilisateurManagedBean.findAvatar(login.connectedUser)}"/>
+                    <p:fileUpload id="avatarUpload" label="Avatar" fileUploadListener="#{fileUploadManagedBean.fileUpload}" 
+                                  cancelLabel="Annuler" uploadLabel="Charger" mode="advanced" update="@all" 
+                                  invalidFileMessage="Inavalide type image!"  
+                                  allowTypes="/(\.|\/)(gif|jpe?g|png|GIF|JPE?G|PNG|bmp|BMP)$/">
+                    </p:fileUpload>
+                    <p:row>
+                        <p:commandButton id="avatarBtn" value="Choisir une photo" type="button"/>  
+                        <p:tooltip for="avatarBtn" value="Choisir une photo" showEffect="dafe" hideEffect="fade"/>
+
+                        <p:overlayPanel  id="avatartChoicePanel" for="avatarBtn" hideEffect="fade" dynamic="true"> 
+                            <p:panelGrid columns="5">
+
+                                <p:column><p:commandLink update=":formAvatar:foto" ajax="false" actionListener="#{login.changeAvatar('1.png')}"><h:graphicImage id="foto1" url="#{page.requestPath()}/static/images/avatar/1.png" styleClass="avatarColumn"/></p:commandLink></p:column>
+                                <p:column><p:commandLink update=":formAvatar:foto" ajax="false" actionListener="#{login.changeAvatar('2.PNG')}"><h:graphicImage id="foto2" url="#{page.requestPath()}/static/images/avatar/2.PNG" styleClass="avatarColumn"/></p:commandLink></p:column>
+                                <p:column><p:commandLink update=":formAvatar:foto" ajax="false" actionListener="#{login.changeAvatar('3.png')}"><h:graphicImage id="foto3" url="#{page.requestPath()}/static/images/avatar/3.png" styleClass="avatarColumn"/></p:commandLink></p:column>
+                                <p:column><p:commandLink update=":formAvatar:foto" ajax="false" actionListener="#{login.changeAvatar('4.png')}"><h:graphicImage id="foto4" url="#{page.requestPath()}/static/images/avatar/4.png" styleClass="avatarColumn"/></p:commandLink></p:column>
+                                <p:column><p:commandLink update=":formAvatar:foto" ajax="false" actionListener="#{login.changeAvatar('5.PNG')}"><h:graphicImage id="foto5" url="#{page.requestPath()}/static/images/avatar/5.PNG" styleClass="avatarColumn"/></p:commandLink></p:column>
+
+                                <p:column><p:commandLink update=":formAvatar:foto" ajax="false" actionListener="#{login.changeAvatar('6.png')}"><h:graphicImage id="foto6" url="#{page.requestPath()}/static/images/avatar/6.png" styleClass="avatarColumn"/></p:commandLink></p:column>
+                                <p:column><p:commandLink update=":formAvatar:foto" ajax="false" actionListener="#{login.changeAvatar('7.png')}"><h:graphicImage id="foto7" url="#{page.requestPath()}/static/images/avatar/7.png" styleClass="avatarColumn"/></p:commandLink></p:column>
+                                <p:column><p:commandLink update=":formAvatar:foto" ajax="false" actionListener="#{login.changeAvatar('8.PNG')}"><h:graphicImage id="foto8" url="#{page.requestPath()}/static/images/avatar/8.PNG" styleClass="avatarColumn"/></p:commandLink></p:column>
+                                <p:column><p:commandLink update=":formAvatar:foto" ajax="false" actionListener="#{login.changeAvatar('9.PNG')}"><h:graphicImage id="foto9" url="#{page.requestPath()}/static/images/avatar/9.PNG" styleClass="avatarColumn"/></p:commandLink></p:column>
+                                <p:column><p:commandLink update=":formAvatar:foto" ajax="false" actionListener="#{login.changeAvatar('10.png')}"><h:graphicImage id="foto10" url="#{page.requestPath()}/static/images/avatar/10.png" styleClass="avatarColumn"/></p:commandLink></p:column>
+
+                                <p:column><p:commandLink update=":formAvatar:foto" ajax="false" actionListener="#{login.changeAvatar('11.PNG')}"><h:graphicImage id="foto11" url="#{page.requestPath()}/static/images/avatar/11.PNG" styleClass="avatarColumn"/></p:commandLink></p:column>
+                                <p:column><p:commandLink update=":formAvatar:foto" ajax="false" actionListener="#{login.changeAvatar('12.png')}"><h:graphicImage id="foto12" url="#{page.requestPath()}/static/images/avatar/12.png" styleClass="avatarColumn"/></p:commandLink></p:column>
+                                <p:column><p:commandLink update=":formAvatar:foto" ajax="false" actionListener="#{login.changeAvatar('13.PNG')}"><h:graphicImage id="foto13" url="#{page.requestPath()}/static/images/avatar/13.PNG" styleClass="avatarColumn"/></p:commandLink></p:column>
+                                <p:column><p:commandLink update=":formAvatar:foto" ajax="false" actionListener="#{login.changeAvatar('14.png')}"><h:graphicImage id="foto14" url="#{page.requestPath()}/static/images/avatar/14.png" styleClass="avatarColumn"/></p:commandLink></p:column>
+                                <p:column><p:commandLink update=":formAvatar:foto" ajax="false" actionListener="#{login.changeAvatar('15.PNG')}"><h:graphicImage id="foto15" url="#{page.requestPath()}/static/images/avatar/15.PNG" styleClass="avatarColumn"/></p:commandLink></p:column>
+
+                                <p:column><p:commandLink update=":formAvatar:foto" ajax="false" actionListener="#{login.changeAvatar('16.PNG')}"><h:graphicImage id="foto16" url="#{page.requestPath()}/static/images/avatar/16.PNG" styleClass="avatarColumn"/></p:commandLink></p:column>
+                                <p:column><p:commandLink update=":formAvatar:foto" ajax="false" actionListener="#{login.changeAvatar('17.PNG')}"><h:graphicImage id="foto17" url="#{page.requestPath()}/static/images/avatar/17.PNG" styleClass="avatarColumn"/></p:commandLink></p:column>
+                                <p:column><p:commandLink update=":formAvatar:foto" ajax="false" actionListener="#{login.changeAvatar('18.PNG')}"><h:graphicImage id="foto18" url="#{page.requestPath()}/static/images/avatar/18.PNG" styleClass="avatarColumn"/></p:commandLink></p:column>
+                                <p:column><p:commandLink update=":formAvatar:foto" ajax="false" actionListener="#{login.changeAvatar('19.png')}"><h:graphicImage id="foto19" url="#{page.requestPath()}/static/images/avatar/19.png" styleClass="avatarColumn"/></p:commandLink></p:column>
+                                <p:column><p:commandLink update=":formAvatar:foto" ajax="false" actionListener="#{login.changeAvatar('20.PNG')}"><h:graphicImage id="foto20" url="#{page.requestPath()}/static/images/avatar/20.PNG" styleClass="avatarColumn"/></p:commandLink></p:column>
+
+                            </p:panelGrid>
+                        </p:overlayPanel>
+                    </p:row>
+                </h:panelGrid>
+            </p:panel>  
+        </h:form>
+        <p:spacer height="10"/>
+        <h:form id="formProfil">
+            <p:panel id="personal" header="Informations">  
+                <h:panelGrid columns="8" cellpadding="5" style="width: 100%;">
+                    
+                    <h:outputLabel value="Prénom : " for="prenom"/>
+                    <p:inputText value="#{login.connectedUser.prenom}" disabled="true" id="prenom" required="true" requiredMessage="Champ prénom oblogatoire !!" maxlength="45" label="Prénom"/> 
+                    
+                    <h:outputLabel value="Nom : " for="nom"/>
+                    <p:inputText value="#{login.connectedUser.nom}" id="nom" disabled="true" required="true" requiredMessage="Champ nom oblogatoire !!" maxlength="45" label="Nom"/> 
+                    
+                    <h:outputLabel value="Genre : " for="genre1"/>
+                    <p:inputText id="genre1" disabled="true" rendered="#{login.connectedUser.genre eq true}" value="Homme" label="Genre"/>
+                    <p:inputText id="genre2" disabled="true" rendered="#{login.connectedUser.genre eq false}" value="Femme" label="Genre"/>
+                    <p:inputText id="genre3" disabled="true" rendered="#{login.connectedUser.genre eq null}" value="" label="Genre"/>
+                    
+                    <p:outputLabel value="Date de naissance : " for="dateNaissance"/>
+                    <p:calendar id="dateNaissance" disabled="true" pattern="dd/MM/yyyy" value="#{login.connectedUser.dateNaissance}" locale="fr" mode="popup"/>  
+                    
+                    <h:outputLabel value="Adresse : " for="adr"/>
+                    <p:inputText value="#{login.connectedUser.adresse}" disabled="true" id="adr" label="Adresse"></p:inputText> 
+                    
+                    <h:outputLabel value="Mobile : " for="mob"/>
+                    <p:inputText value="#{login.connectedUser.mobile}" disabled="true" id="mob" label="Mobile"></p:inputText> 
+                    
+                    <h:outputLabel value="E-mail : " for="email"/>
+                    <p:inputText value="#{login.connectedUser.email}" disabled="true" id="email" label="E-mail"></p:inputText> 
+                    
+                    <h:outputLabel value="Droit : " for="droit"/>
+                    <p:inputText value="#{login.connectedUser.idDroit.libelle}" disabled="true" id="droit" label="Droit"></p:inputText> 
+                    
+                </h:panelGrid>
+                <p:spacer height="10"/>
+            </p:panel>
+        </h:form>
+    </ui:define>
+</ui:composition>

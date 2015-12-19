@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/pages/public/SiTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="bodybar">
+        <h:panelGrid columns="1">
+            <h:outputText value="Gestion des SMS"/>
+        </h:panelGrid>
+    </ui:define>
+
+
+    <ui:define name="body">
+
+        <h:form id="form">
+            <p:panel id="panellistCollaborateur">
+                <h:panelGrid columns="1" style="text-align: center;width: 100%">
+                    <p:selectOneButton value="#{proprietaireManagedBean.etat}" >
+                        <f:selectItem id="btnTous" itemLabel="Tous les sms" itemDescription="Tous les sms " itemValue="default" />
+                    </p:selectOneButton>
+
+                </h:panelGrid>
+            </p:panel>
+        </h:form>
+
+        <br/>
+
+        <h:form id="listQueueForm">
+            <p:dataTable id="listQueueDataTable"
+                         value="#{sMSManagedBean.listSms}" emptyMessage="Aucun sms trouvé !!"
+                         paginator="true" rows="20" var="item" paginatorPosition="bottom" styleClass="ui-datatable-center"
+                             paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                         selection="#{sMSManagedBean.selectedListSms}"    rowsPerPageTemplate="5,10,20,50,100,200" rowKey="#{item.idSms}">
+
+                <p:column selectionMode="multiple"  />
+                
+                <p:column  headerText="Message"  >
+                    <div style="width: 130px; white-space: nowrap; overflow-x: scroll;">
+                    <h:outputText value="#{item.message}" style="height :100%" />
+                    </div>
+                </p:column>
+                
+                
+                <p:column  headerText="Destinataires">
+                    <h:outputText value="#{item.destinataires}"/>
+                </p:column>
+
+                <p:column   headerText="Nombre de messages">
+                    <h:outputText value="#{item.nbreMessages}"/>
+                </p:column>
+                
+                <p:column   headerText="Date Envoi">
+                    <h:outputText value="#{item.dateEnvoi}"/>
+                </p:column>
+                
+                
+                <p:column   headerText="Description" >
+                    <div style="width: 130px; white-space: nowrap; overflow-x: scroll;"> 
+                    <h:outputText value="#{item.description}"  />
+                    </div>
+                </p:column>
+                
+                
+                <p:column   headerText="Coût sms">
+                    <h:outputText value="#{item.coutSms}"/>
+                </p:column>
+                
+                <p:column   headerText="Statut">
+                    <h:outputText value="#{item.statut}"/>
+                </p:column>
+                
+                 <p:column   headerText="Nom du service">
+                     <h:outputText value="#{item.accountId.idService.nomService}"/>
+                </p:column>
+                
+                
+                <f:facet name="footer">  
+            <p:commandButton id="deleteButton" value="Supprimer" icon="ui-icon-trash"  
+                onclick="confirmation.show();"   />
+        </f:facet> 
+
+            </p:dataTable>
+            
+             
+            
+           
+        </h:form>
+        
+        <p:confirmDialog id="confirmDialog" message="Êtes vous sûr de bien vouloir supprimer définitivement ce(s) sms ?"
+                         header="Suppression de ce service" severity="alert" widgetVar="confirmation" appendToBody="true">
+            <h:form>
+                <center>
+                    <p:commandButton id="confirm" value="Oui" update=":listQueueForm:listQueueDataTable" oncomplete="confirmation.hide()"
+                                      actionListener="#{sMSManagedBean.destroy()}"            />
+                    <p:commandButton id="decline" value="Non" onclick="confirmation.hide();" type="button"/>
+                </center>
+                <p:tooltip for="confirm" value="Valider l'opération de suppression de ce(s) sms" showEffect="fadeIn" hideEffect="fadeIn"/>
+                <p:tooltip for="decline" value="Annuler l'opération de suppression de ce(s) sms" showEffect="fadeIn" hideEffect="fadeIn"/>
+            </h:form>
+        </p:confirmDialog>
+    </ui:define>
+
+</ui:composition>
