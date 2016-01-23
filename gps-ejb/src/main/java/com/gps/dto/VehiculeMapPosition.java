@@ -4,54 +4,50 @@
  */
 package com.gps.dto;
 
+import java.util.Date;
+
 import com.gps.entities.Vehicule;
 import com.gps.entities.VehiculePosition;
-import java.util.Date;
 
 /**
  *
  * @author amine.sagaama@gmail.com
  */
 public class VehiculeMapPosition {
-    
-    private VehiculePosition vehiculePosition;
-    
-    private Vehicule vehicule;
 
-    private Date dateEnregistrement;
+	private VehiculePosition vehiculePosition;
 
-    public VehiculeMapPosition(VehiculePosition vehiculePosition, Vehicule vehicule) {
-        this.vehiculePosition = vehiculePosition;
-        this.vehicule = vehicule;
-    }
-    
-    
+	private Vehicule vehicule;
 
-    public Date getDateEnregistrement() {
-        return dateEnregistrement;
-    }
+	private Date dateEnregistrement;
 
-    public void setDateEnregistrement(Date dateEnregistrement) {
-        this.dateEnregistrement = dateEnregistrement;
-    }
-        
-    public VehiculePosition getVehiculePosition() {
-        return vehiculePosition;
-    }
+	public VehiculeMapPosition(VehiculePosition vehiculePosition, Vehicule vehicule) {
+		this.vehiculePosition = vehiculePosition;
+		this.vehicule = vehicule;
+	}
 
-    public void setVehiculePosition(VehiculePosition vehiculePosition) {
-        this.vehiculePosition = vehiculePosition;
-    }
+	public Date getDateEnregistrement() {
+		return dateEnregistrement;
+	}
 
-    public Vehicule getVehicule() {
-        return vehicule;
-    }
+	public void setDateEnregistrement(Date dateEnregistrement) {
+		this.dateEnregistrement = dateEnregistrement;
+	}
 
-    public void setVehicule(Vehicule vehicule) {
-        this.vehicule = vehicule;
-    }
-    
-    
-    
-    
+	public VehiculePosition getVehiculePosition() {
+		return vehiculePosition;
+	}
+
+	public void setVehiculePosition(VehiculePosition vehiculePosition) {
+		this.vehiculePosition = vehiculePosition;
+	}
+
+	public Vehicule getVehicule() {
+		return vehicule;
+	}
+
+	public void setVehicule(Vehicule vehicule) {
+		this.vehicule = vehicule;
+	}
+
 }

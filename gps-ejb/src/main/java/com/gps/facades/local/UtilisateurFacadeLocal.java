@@ -4,9 +4,11 @@
  */
 package com.gps.facades.local;
 
-import com.gps.entities.Utilisateur;
 import java.util.List;
+
 import javax.ejb.Local;
+
+import com.gps.entities.Utilisateur;
 
 /**
  *
@@ -15,23 +17,23 @@ import javax.ejb.Local;
 
 @Local(value = UtilisateurFacadeLocal.class)
 public interface UtilisateurFacadeLocal {
-    
-    void create(Object collaborateur) ;
 
-    void edit(Object collaborateur) ;
+	void create(Object collaborateur);
 
-    void remove(Object collaborateur) ;
+	void edit(Object collaborateur);
 
-    Object find(Class entityClass, Object id) ;
-    
-    List<Utilisateur> findAllUtilisateurs() ;
-    
-    Utilisateur findUtilisateurByIdentifiant(String identif) ;
-    
-    List<Utilisateur> findEnabledUtilisateurs() ;
-            
-    List<Utilisateur> findUtilisateursByMobile(String mobile) ;
-    
-    List<Utilisateur> findUtilisateursByEmail(String email) ;
-    
+	void remove(Object collaborateur);
+
+	Object find(Class entityClass, Object id);
+
+	List<Utilisateur> findAllUtilisateurs();
+
+	Utilisateur findUtilisateurByIdentifiant(String identif);
+
+	List<Utilisateur> findEnabledUtilisateurs();
+
+	List<Utilisateur> findUtilisateursByMobile(String mobile);
+
+	List<Utilisateur> findUtilisateursByEmail(String email);
+
 }

@@ -4,9 +4,11 @@
  */
 package com.gps.facades.local;
 
-import com.gps.entities.Menu;
 import java.util.List;
+
 import javax.ejb.Local;
+
+import com.gps.entities.Menu;
 
 /**
  *
@@ -16,16 +18,16 @@ import javax.ejb.Local;
 @Local(value = MenuFacadeLocal.class)
 public interface MenuFacadeLocal {
 
-    void create(Object menu);
+	void create(Object menu);
 
-    void edit(Object menu);
+	void edit(Object menu);
 
-    void remove(Object menu);
+	void remove(Object menu);
 
-    Object find(Class entityClass, Object id);
+	Object find(Class entityClass, Object id);
 
-    List<Menu> findAllMenus();
+	List<Menu> findAllMenus();
 
-    public Menu findActiveMenu();
-    
+	public Menu findActiveMenu();
+
 }

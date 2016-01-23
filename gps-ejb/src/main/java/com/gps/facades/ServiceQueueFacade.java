@@ -4,16 +4,15 @@
  */
 package com.gps.facades;
 
-
-import com.gps.entities.Servicequeue;
-import com.gps.facades.local.ServiceQueueFacadeLocal;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import com.gps.entities.Servicequeue;
+import com.gps.facades.local.ServiceQueueFacadeLocal;
 
 /**
  *
@@ -21,27 +20,23 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class ServiceQueueFacade extends AbstractFacade implements ServiceQueueFacadeLocal, Serializable {
-    
-    @PersistenceContext(unitName = "gpsPU")
-    private EntityManager em;
 
-    @Override
-    protected EntityManager getEntityManager() {
-        return em;
-    }
+	@PersistenceContext(unitName = "gpsPU")
+	private EntityManager em;
 
-    @Override
-    public List<Servicequeue> findAllServicesQ() {
-        return findAll(Servicequeue.class, null, "");
-    }
+	@Override
+	protected EntityManager getEntityManager() {
+		return em;
+	}
 
-    @Override
-    public Servicequeue findServicequeueByOrder(Integer order) {
-        return (Servicequeue) findByAttribute(Servicequeue.class, "ordre", order);
-    }
+	@Override
+	public List<Servicequeue> findAllServicesQ() {
+		return findAll(Servicequeue.class, null, "");
+	}
 
-  
+	@Override
+	public Servicequeue findServicequeueByOrder(Integer order) {
+		return (Servicequeue) findByAttribute(Servicequeue.class, "ordre", order);
+	}
 
-    
-    
 }

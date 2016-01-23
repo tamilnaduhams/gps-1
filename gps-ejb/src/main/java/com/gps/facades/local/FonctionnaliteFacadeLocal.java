@@ -5,9 +5,11 @@
 
 package com.gps.facades.local;
 
-import com.gps.entities.Fonctionnalite;
 import java.util.List;
+
 import javax.ejb.Local;
+
+import com.gps.entities.Fonctionnalite;
 
 /**
  *
@@ -16,18 +18,18 @@ import javax.ejb.Local;
 
 @Local(value = FonctionnaliteFacadeLocal.class)
 public interface FonctionnaliteFacadeLocal {
-    
-    void create(Object fonctionnalite) ;
 
-    void edit(Object fonctionnalite) ;
+	void create(Object fonctionnalite);
 
-    void remove(Object fonctionnalite) ;
+	void edit(Object fonctionnalite);
 
-    Object find(Class entityClass, Object id);
+	void remove(Object fonctionnalite);
 
-    List<Fonctionnalite> findAllFonctionnalites() ;
-    
-    List<Fonctionnalite> findFonctionnalitesByMenu(Integer menu) ;
-    
-    List<Fonctionnalite> findFonctionnalitesByURL(String url) ;
+	Object find(Class entityClass, Object id);
+
+	List<Fonctionnalite> findAllFonctionnalites();
+
+	List<Fonctionnalite> findFonctionnalitesByMenu(Integer menu);
+
+	List<Fonctionnalite> findFonctionnalitesByURL(String url);
 }

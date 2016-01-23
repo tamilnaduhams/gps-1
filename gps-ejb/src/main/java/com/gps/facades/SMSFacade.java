@@ -4,14 +4,15 @@
  */
 package com.gps.facades;
 
-
-import com.gps.entities.Sms;
-import com.gps.facades.local.SmsFacadeLocal;
 import java.io.Serializable;
 import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import com.gps.entities.Sms;
+import com.gps.facades.local.SmsFacadeLocal;
 
 /**
  *
@@ -19,24 +20,17 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class SMSFacade extends AbstractFacade implements SmsFacadeLocal, Serializable {
-    @PersistenceContext(unitName = "gpsPU")
-    private EntityManager em;
-    
+	@PersistenceContext(unitName = "gpsPU")
+	private EntityManager em;
 
-    @Override
-    protected EntityManager getEntityManager() {
-        return em;
-    }
+	@Override
+	protected EntityManager getEntityManager() {
+		return em;
+	}
 
-    @Override
-    public List<Sms> findAllSms() {
-        return findAll(Sms.class, null, "");
-    }
+	@Override
+	public List<Sms> findAllSms() {
+		return findAll(Sms.class, null, "");
+	}
 
-    
-    
-    
-    
-    
-    
 }

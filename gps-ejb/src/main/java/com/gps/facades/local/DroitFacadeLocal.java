@@ -4,9 +4,11 @@
  */
 package com.gps.facades.local;
 
-import com.gps.entities.Droit;
 import java.util.List;
+
 import javax.ejb.Local;
+
+import com.gps.entities.Droit;
 
 /**
  *
@@ -15,19 +17,19 @@ import javax.ejb.Local;
 
 @Local(value = DroitFacadeLocal.class)
 public interface DroitFacadeLocal {
-    
-    void create(Object authorities) ;
 
-    void edit(Object authorities) ;
+	void create(Object authorities);
 
-    void remove(Object authorities) ;
+	void edit(Object authorities);
 
-    Object find(Class entityClass, Object id);
+	void remove(Object authorities);
 
-    List<Droit> findAllDroits() ;
+	Object find(Class entityClass, Object id);
 
-    Droit findDroitByIdDroit(Integer dro) ;
-    
-    List<Droit> findDroitByLibDroit(String dro) ;
-    
+	List<Droit> findAllDroits();
+
+	Droit findDroitByIdDroit(Integer dro);
+
+	List<Droit> findDroitByLibDroit(String dro);
+
 }

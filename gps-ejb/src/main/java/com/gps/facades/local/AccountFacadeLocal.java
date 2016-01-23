@@ -4,11 +4,12 @@
  */
 package com.gps.facades.local;
 
+import java.util.List;
+
+import javax.ejb.Local;
 
 import com.gps.entities.Account;
 import com.gps.entities.Service;
-import java.util.List;
-import javax.ejb.Local;
 
 /**
  *
@@ -16,17 +17,16 @@ import javax.ejb.Local;
  */
 @Local(value = AccountFacadeLocal.class)
 public interface AccountFacadeLocal {
-    void create(Object c);
+	void create(Object c);
 
-    void edit(Object c);
+	void edit(Object c);
 
-    void remove(Object c);
-    
-    public Object find(Class entityClass, Object id);
-    
-    public List<Account> findAllAccounts();
-    
-    public List<Account> getAllAccountByService(Service service);
-    
-    
+	void remove(Object c);
+
+	public Object find(Class entityClass, Object id);
+
+	public List<Account> findAllAccounts();
+
+	public List<Account> getAllAccountByService(Service service);
+
 }

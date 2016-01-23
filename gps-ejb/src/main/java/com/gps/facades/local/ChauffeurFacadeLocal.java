@@ -4,10 +4,11 @@
  */
 package com.gps.facades.local;
 
-import com.gps.entities.Boitier;
-import com.gps.entities.Chauffeur;
 import java.util.List;
+
 import javax.ejb.Local;
+
+import com.gps.entities.Chauffeur;
 
 /**
  *
@@ -16,14 +17,14 @@ import javax.ejb.Local;
 
 @Local(value = ChauffeurFacadeLocal.class)
 public interface ChauffeurFacadeLocal {
-    
-    void create(Object chauffeur) ;
 
-    void edit(Object chauffeur) ;
+	void create(Object chauffeur);
 
-    void remove(Object chauffeur) ;
+	void edit(Object chauffeur);
 
-    Object find(Class entityClass, Object id);
+	void remove(Object chauffeur);
 
-    List<Chauffeur> findAllChauffeurs();
+	Object find(Class entityClass, Object id);
+
+	List<Chauffeur> findAllChauffeurs();
 }

@@ -4,10 +4,11 @@
  */
 package com.gps.facades.local;
 
+import java.util.List;
+
+import javax.ejb.Local;
 
 import com.gps.entities.Servicequeue;
-import java.util.List;
-import javax.ejb.Local;
 
 /**
  *
@@ -15,15 +16,15 @@ import javax.ejb.Local;
  */
 @Local(value = ServiceQueueFacadeLocal.class)
 public interface ServiceQueueFacadeLocal {
-    
-    void create(Object c);
 
-    void edit(Object c);
+	void create(Object c);
 
-    void remove(Object c);
-    
-    List<Servicequeue> findAllServicesQ();
-    
-    Servicequeue findServicequeueByOrder(Integer order);
-    
+	void edit(Object c);
+
+	void remove(Object c);
+
+	List<Servicequeue> findAllServicesQ();
+
+	Servicequeue findServicequeueByOrder(Integer order);
+
 }

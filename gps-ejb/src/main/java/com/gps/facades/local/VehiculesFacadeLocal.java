@@ -4,12 +4,14 @@
  */
 package com.gps.facades.local;
 
-import com.gps.entities.Vehicule;
-import com.gps.dto.VehiculeMapPosition;
-import com.gps.entities.VehiculePosition;
 import java.util.Date;
 import java.util.List;
+
 import javax.ejb.Local;
+
+import com.gps.dto.VehiculeMapPosition;
+import com.gps.entities.Vehicule;
+import com.gps.entities.VehiculePosition;
 
 /**
  *
@@ -18,20 +20,20 @@ import javax.ejb.Local;
 
 @Local(value = VehiculesFacadeLocal.class)
 public interface VehiculesFacadeLocal {
-    
-    void create(Object vehicule) ;
 
-    void edit(Object vehicule) ;
+	void create(Object vehicule);
 
-    void remove(Object vehicule) ;
+	void edit(Object vehicule);
 
-    Object find(Class entityClass, Object id);
+	void remove(Object vehicule);
 
-    List<Vehicule> findAllVehicules();
-    
-    List<VehiculeMapPosition> findVehiculesPositions();
+	Object find(Class entityClass, Object id);
 
-    List<Vehicule> findVehiculeByMatricule(String matricule);
+	List<Vehicule> findAllVehicules();
 
-    List<VehiculePosition> fetchVehiculeItinerary(Vehicule vehicule, Date dateDebut, Date dateFin);
+	List<VehiculeMapPosition> findVehiculesPositions();
+
+	List<Vehicule> findVehiculeByMatricule(String matricule);
+
+	List<VehiculePosition> fetchVehiculeItinerary(Vehicule vehicule, Date dateDebut, Date dateFin);
 }

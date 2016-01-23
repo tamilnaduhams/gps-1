@@ -7,13 +7,13 @@ package com.gps.helpers;
 
 public interface ClassEnumHelper {
 
-    public static enum Roles {
+	public static enum Roles {
 
-        Administrateur, Utilisateur
-    }
+		Administrateur, Utilisateur
+	}
 
-    public static enum SettingKeys {
+	public static enum SettingKeys {
 
-        Longitude, Latitude
-    }
+		Longitude, Latitude
+	}
 }

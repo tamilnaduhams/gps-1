@@ -4,9 +4,11 @@
  */
 package com.gps.facades.local;
 
-import com.gps.entities.Boitier;
 import java.util.List;
+
 import javax.ejb.Local;
+
+import com.gps.entities.Boitier;
 
 /**
  *
@@ -15,16 +17,16 @@ import javax.ejb.Local;
 
 @Local(value = BoitierFacadeLocal.class)
 public interface BoitierFacadeLocal {
-    
-    void create(Object authorities) ;
 
-    void edit(Object authorities) ;
+	void create(Object authorities);
 
-    void remove(Object authorities) ;
+	void edit(Object authorities);
 
-    Object find(Class entityClass, Object id);
+	void remove(Object authorities);
 
-    List<Boitier> findAllBoitiers();
+	Object find(Class entityClass, Object id);
 
-    List<Boitier> findBoitierByNumBoitier(String numBoitier);
+	List<Boitier> findAllBoitiers();
+
+	List<Boitier> findBoitierByNumBoitier(String numBoitier);
 }

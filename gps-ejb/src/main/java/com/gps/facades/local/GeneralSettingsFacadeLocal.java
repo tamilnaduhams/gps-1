@@ -4,9 +4,11 @@
  */
 package com.gps.facades.local;
 
-import com.gps.entities.GeneralSettings;
 import java.util.List;
+
 import javax.ejb.Local;
+
+import com.gps.entities.GeneralSettings;
 
 /**
  *
@@ -16,20 +18,20 @@ import javax.ejb.Local;
 @Local(value = GeneralSettingsFacadeLocal.class)
 public interface GeneralSettingsFacadeLocal {
 
-    void create(Object c);
+	void create(Object c);
 
-    void edit(Object c);
+	void edit(Object c);
 
-    void remove(Object c);
+	void remove(Object c);
 
-    public Object find(Class entityClass, Object id);
+	public Object find(Class entityClass, Object id);
 
-    public GeneralSettings findGeneralSettingsBySettingsCode(String settingsCode);
+	public GeneralSettings findGeneralSettingsBySettingsCode(String settingsCode);
 
-    List<GeneralSettings> findAllGeneralSettings();
-    
-    int findGeneralSettingsBySettingsCode(String settingsCode, int defaultValue);
-    
-    String findGeneralSettingsBySettingsCode(String settingsCode, String defaultValue);
-    
+	List<GeneralSettings> findAllGeneralSettings();
+
+	int findGeneralSettingsBySettingsCode(String settingsCode, int defaultValue);
+
+	String findGeneralSettingsBySettingsCode(String settingsCode, String defaultValue);
+
 }
