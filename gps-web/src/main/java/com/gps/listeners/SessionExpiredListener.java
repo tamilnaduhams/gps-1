@@ -7,6 +7,7 @@ package com.gps.listeners;
 import javax.servlet.annotation.WebListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -16,27 +17,28 @@ import org.apache.log4j.Logger;
 
 @WebListener
 public class SessionExpiredListener implements HttpSessionListener {
-    
-    private static final Logger logger = Logger.getLogger(SessionExpiredListener.class);
 
-    public SessionExpiredListener() {
-    }
-    
-    @Override
-    public void sessionCreated(HttpSessionEvent se) {
-        getLogger().info("Session opened");
-    }
-    @Override
-    public void sessionDestroyed(HttpSessionEvent se) {
-        getLogger().info("Session closed");
-        se.getSession().invalidate();
-    }
+	private static final Logger logger = Logger.getLogger(SessionExpiredListener.class);
 
-    /**
-     * @return the logger
-     */
-    public static Logger getLogger() {
-        return logger;
-    }
-    
+	public SessionExpiredListener() {
+	}
+
+	@Override
+	public void sessionCreated(HttpSessionEvent se) {
+		getLogger().info("Session opened");
+	}
+
+	@Override
+	public void sessionDestroyed(HttpSessionEvent se) {
+		getLogger().info("Session closed");
+		se.getSession().invalidate();
+	}
+
+	/**
+	 * @return the logger
+	 */
+	public static Logger getLogger() {
+		return logger;
+	}
+
 }

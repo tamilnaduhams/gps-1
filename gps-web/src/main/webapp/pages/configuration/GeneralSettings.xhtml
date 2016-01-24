@@ -1,118 +1,165 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-                template="/pages/public/SiTemplate.xhtml"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:pe="http://primefaces.org/ui/extensions">
-    
-    <ui:define name="title">
-        <h:outputText value="Gps"></h:outputText>
-    </ui:define>
-    
-    <ui:define name="bodybar">
-        <h:panelGrid columns="1" dir="#{login.dir}">
-            <h:outputText value="Configuration générale"/>
-        </h:panelGrid>
-    </ui:define>
-    
-    <ui:define name="bodybarRight">
+	template="/pages/public/SiTemplate.xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
 
-        <p:commandButton icon="ui-icon-plusthick" id="newGeneralSettings" title="Ajouter un paramètre" actionListener="#{generalSettingsManagedBean.prepareCreate()}"
-                         value="Nouveau Paramètre" update=":createGeneralSettingsForm" onclick="createGeneralSettingsWidget.show()">    
-        </p:commandButton>
+	<ui:define name="title">
+		<h:outputText value="Gps"></h:outputText>
+	</ui:define>
 
-    </ui:define>
-    
-    <ui:define name="body">
-        <h:form id="formGeneralSettings">
+	<ui:define name="bodybar">
+		<h:panelGrid columns="1" dir="#{login.dir}">
+			<h:outputText value="Configuration générale" />
+		</h:panelGrid>
+	</ui:define>
 
-            <p:dataTable id="listGeneralSettings" value="#{generalSettingsManagedBean.listGeneralSettings}" var="item" paginator="true" rows="15"   paginatorPosition="bottom"
-                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
-                <p:column headerText="Code">
-                    <center>
-                        <p:outputLabel value="#{item.settingCode}"/>
-                    </center>
-                </p:column>
-                <p:column headerText="Valeur">
-                    <center>    
-                        <p:outputLabel value="#{item.settingValue}"/>
-                    </center>  
-                </p:column>
-                <p:column headerText="Actif">
-                    <center>
-                        <p:selectBooleanButton id="idenabed"  value="#{item.enabled ne null ? item.enabled : true}" onLabel="Activé"
-                                               offLabel="Desactivé" onIcon="ui-icon-check" offIcon="ui-icon-close">
-                            <p:ajax listener="#{generalSettingsManagedBean.activationParametre(item)}"/>
-                        </p:selectBooleanButton>
-                    </center>
-                </p:column>
+	<ui:define name="bodybarRight">
 
-                <p:column headerText="Actions" style="text-align: center" width="50">
-                    <p:commandButton id="editBtn" icon="ui-icon ui-icon-search" update=":editGeneralSettingsForm" oncomplete="editGeneralSettingsWidget.show();"> 
-                        <f:setPropertyActionListener value="#{item}" target="#{generalSettingsManagedBean.selectedGeneralSettings}"/>
-                    </p:commandButton>
-                    <p:commandButton id="deleteBtn" icon="ui-icon ui-icon-trash" oncomplete="confirmation.show();">     
-                        <f:setPropertyActionListener value="#{item}" target="#{generalSettingsManagedBean.selectedGeneralSettings}"/>
-                    </p:commandButton>
-                    <p:tooltip for="editBtn" value="Modifier le paramètre"/>
-                    <p:tooltip for="deleteBtn" value="Supprimer le paramètre"/>
-                </p:column>
-            </p:dataTable>
-        </h:form>
-    </ui:define>
+		<p:commandButton icon="ui-icon-plusthick" id="newGeneralSettings"
+			title="Ajouter un paramètre"
+			actionListener="#{generalSettingsManagedBean.prepareCreate()}"
+			value="Nouveau Paramètre" update=":createGeneralSettingsForm"
+			onclick="createGeneralSettingsWidget.show()">
+		</p:commandButton>
 
-    <ui:define  name="dialogbox">
-        <p:confirmDialog id="confirmations" message="Êtes vous sûre de vouloir procéder à la suppression?"  
-                         header="Processus de suppression" severity="alert" widgetVar="confirmation" appendToBody="true">  
-            <h:form>
-                <p:commandButton id="confirm" value="Oui" update=":formGeneralSettings:listGeneralSettings" oncomplete="confirmation.hide()"  
-                                 actionListener="#{generalSettingsManagedBean.destroy()}" ajax="false"/>  
-                <p:commandButton id="decline" value="Non" onclick="confirmation.hide()" type="button"/>   
-            </h:form>
-        </p:confirmDialog>
+	</ui:define>
 
-        <p:dialog closeOnEscape="true" resizable="false" id="createGeneralSettings" appendToBody="true" closable="true" header="Nouveau Paramètre" widgetVar="createGeneralSettingsWidget" modal="true">
-            <h:form id="createGeneralSettingsForm">
-                <p:panelGrid id="panelCreate" columns="2" rendered="#{generalSettingsManagedBean.listCode.size() != 0}">
-                    <h:outputLabel value="Code" for="idCode"/>
-                    <p:selectOneMenu id="idCode" required="true"  style="width: 140px;" value="#{generalSettingsManagedBean.selectedGeneralSettings.settingCode}" label="Code">
-                        <f:selectItems value="#{generalSettingsManagedBean.listCode}" var="parametre" itemValue="#{parametre}" itemLabel="#{parametre}"/>
-                    </p:selectOneMenu>
+	<ui:define name="body">
+		<h:form id="formGeneralSettings">
 
-                    <p:outputLabel value="Valeur" for="idValue"/>
-                    <p:inputText id="idValue" maxlength="45" required="true" requiredMessage="Champ Valeur obligatoire!" value="#{generalSettingsManagedBean.selectedGeneralSettings.settingValue}" title="Valeur"/>
+			<p:dataTable id="listGeneralSettings"
+				value="#{generalSettingsManagedBean.listGeneralSettings}" var="item"
+				paginator="true" rows="15" paginatorPosition="bottom"
+				paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+				<p:column headerText="Code">
+					<center>
+						<p:outputLabel value="#{item.settingCode}" />
+					</center>
+				</p:column>
+				<p:column headerText="Valeur">
+					<center>
+						<p:outputLabel value="#{item.settingValue}" />
+					</center>
+				</p:column>
+				<p:column headerText="Actif">
+					<center>
+						<p:selectBooleanButton id="idenabed"
+							value="#{item.enabled ne null ? item.enabled : true}"
+							onLabel="Activé" offLabel="Desactivé" onIcon="ui-icon-check"
+							offIcon="ui-icon-close">
+							<p:ajax
+								listener="#{generalSettingsManagedBean.activationParametre(item)}" />
+						</p:selectBooleanButton>
+					</center>
+				</p:column>
+
+				<p:column headerText="Actions" style="text-align: center" width="50">
+					<p:commandButton id="editBtn" icon="ui-icon ui-icon-search"
+						update=":editGeneralSettingsForm"
+						oncomplete="editGeneralSettingsWidget.show();">
+						<f:setPropertyActionListener value="#{item}"
+							target="#{generalSettingsManagedBean.selectedGeneralSettings}" />
+					</p:commandButton>
+					<p:commandButton id="deleteBtn" icon="ui-icon ui-icon-trash"
+						oncomplete="confirmation.show();">
+						<f:setPropertyActionListener value="#{item}"
+							target="#{generalSettingsManagedBean.selectedGeneralSettings}" />
+					</p:commandButton>
+					<p:tooltip for="editBtn" value="Modifier le paramètre" />
+					<p:tooltip for="deleteBtn" value="Supprimer le paramètre" />
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+
+	<ui:define name="dialogbox">
+		<p:confirmDialog id="confirmations"
+			message="Êtes vous sûre de vouloir procéder à la suppression?"
+			header="Processus de suppression" severity="alert"
+			widgetVar="confirmation" appendToBody="true">
+			<h:form>
+				<p:commandButton id="confirm" value="Oui"
+					update=":formGeneralSettings:listGeneralSettings"
+					oncomplete="confirmation.hide()"
+					actionListener="#{generalSettingsManagedBean.destroy()}"
+					ajax="false" />
+				<p:commandButton id="decline" value="Non"
+					onclick="confirmation.hide()" type="button" />
+			</h:form>
+		</p:confirmDialog>
+
+		<p:dialog closeOnEscape="true" resizable="false"
+			id="createGeneralSettings" appendToBody="true" closable="true"
+			header="Nouveau Paramètre" widgetVar="createGeneralSettingsWidget"
+			modal="true">
+			<h:form id="createGeneralSettingsForm">
+				<p:panelGrid id="panelCreate" columns="2"
+					rendered="#{generalSettingsManagedBean.listCode.size() != 0}">
+					<h:outputLabel value="Code" for="idCode" />
+					<p:selectOneMenu id="idCode" required="true" style="width: 140px;"
+						value="#{generalSettingsManagedBean.selectedGeneralSettings.settingCode}"
+						label="Code">
+						<f:selectItems value="#{generalSettingsManagedBean.listCode}"
+							var="parametre" itemValue="#{parametre}" itemLabel="#{parametre}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Valeur" for="idValue" />
+					<p:inputText id="idValue" maxlength="45" required="true"
+						requiredMessage="Champ Valeur obligatoire!"
+						value="#{generalSettingsManagedBean.selectedGeneralSettings.settingValue}"
+						title="Valeur" />
 
 
-                </p:panelGrid>
+				</p:panelGrid>
 
-                <h:outputLabel value="Tous les codes sont chargés." style="font-size: 12px ;margin: 15px;line-height: 40px;font-weight: bold" rendered="#{generalSettingsManagedBean.listCode.size() == 0}"/>
+				<h:outputLabel value="Tous les codes sont chargés."
+					style="font-size: 12px ;margin: 15px;line-height: 40px;font-weight: bold"
+					rendered="#{generalSettingsManagedBean.listCode.size() == 0}" />
 
-                <center>
-                    <p:commandButton value="Sauvgarder" action="#{generalSettingsManagedBean.create()}" rendered="#{generalSettingsManagedBean.listCode.size() != 0}" update=":formGeneralSettings:listGeneralSettings"/>
-                    <p:commandButton type="reset" value="Annuler" onclick="createGeneralSettingsWidget.hide();" rendered="#{generalSettingsManagedBean.listCode.size() != 0}"/>
-                </center>
-            </h:form>
-        </p:dialog>
+				<center>
+					<p:commandButton value="Sauvgarder"
+						action="#{generalSettingsManagedBean.create()}"
+						rendered="#{generalSettingsManagedBean.listCode.size() != 0}"
+						update=":formGeneralSettings:listGeneralSettings" />
+					<p:commandButton type="reset" value="Annuler"
+						onclick="createGeneralSettingsWidget.hide();"
+						rendered="#{generalSettingsManagedBean.listCode.size() != 0}" />
+				</center>
+			</h:form>
+		</p:dialog>
 
-        <p:dialog closeOnEscape="true" resizable="false" id="editGeneralSettings" appendToBody="true" closable="true" header="Modifier Paramètre" widgetVar="editGeneralSettingsWidget" modal="true">
-            <h:form id="editGeneralSettingsForm">
-                <p:panelGrid id="paneledit" columns="2">
+		<p:dialog closeOnEscape="true" resizable="false"
+			id="editGeneralSettings" appendToBody="true" closable="true"
+			header="Modifier Paramètre" widgetVar="editGeneralSettingsWidget"
+			modal="true">
+			<h:form id="editGeneralSettingsForm">
+				<p:panelGrid id="paneledit" columns="2">
 
-                    <h:outputLabel value="Code" for="idCode"/>
-                    <p:inputText id="idCode"  value="#{generalSettingsManagedBean.selectedGeneralSettings.settingCode}" disabled="true" title="Valeur"/>
+					<h:outputLabel value="Code" for="idCode" />
+					<p:inputText id="idCode"
+						value="#{generalSettingsManagedBean.selectedGeneralSettings.settingCode}"
+						disabled="true" title="Valeur" />
 
-                    <p:outputLabel value="Valeur" for="idValue"/>
-                    <p:inputText id="idValue" maxlength="45" required="true" requiredMessage="Champ Valeur obligatoire!" value="#{generalSettingsManagedBean.selectedGeneralSettings.settingValue}" title="Valeur"/>
-
-
-                </p:panelGrid>
-                <p:commandButton value="Modifier" action="#{generalSettingsManagedBean.update()}" update=":formGeneralSettings:listGeneralSettings"/>
-                <p:commandButton type="reset" value="Annuler" onclick="editGeneralSettingsWidget.hide();"/>
-            </h:form>
-        </p:dialog>
+					<p:outputLabel value="Valeur" for="idValue" />
+					<p:inputText id="idValue" maxlength="45" required="true"
+						requiredMessage="Champ Valeur obligatoire!"
+						value="#{generalSettingsManagedBean.selectedGeneralSettings.settingValue}"
+						title="Valeur" />
 
 
-    </ui:define>
+				</p:panelGrid>
+				<p:commandButton value="Modifier"
+					action="#{generalSettingsManagedBean.update()}"
+					update=":formGeneralSettings:listGeneralSettings" />
+				<p:commandButton type="reset" value="Annuler"
+					onclick="editGeneralSettingsWidget.hide();" />
+			</h:form>
+		</p:dialog>
+
+
+	</ui:define>
 </ui:composition>

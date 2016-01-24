@@ -6,8 +6,10 @@ package com.gps.helpers;
 
 import java.util.Date;
 import java.util.TimeZone;
+
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
+
 /**
  *
  * @author amine.sagaama@gmail.com
@@ -17,27 +19,28 @@ import javax.faces.bean.ManagedBean;
 @ApplicationScoped
 public class DefaultTimeZone {
 
-    private Date currentDate ;
-    
-    public DefaultTimeZone() {
-    }
+	private Date currentDate;
 
-    public TimeZone getTimeZone() {
-        return TimeZone.getDefault();
-    }
+	public DefaultTimeZone() {
+	}
 
-    /**
-     * @return the currentDate
-     */
-    public Date getCurrentDate() {
-        currentDate = new Date();
-        return currentDate;
-    }
+	public TimeZone getTimeZone() {
+		return TimeZone.getDefault();
+	}
 
-    /**
-     * @param currentDate the currentDate to set
-     */
-    public void setCurrentDate(Date currentDate) {
-        this.currentDate = currentDate;
-    }
+	/**
+	 * @return the currentDate
+	 */
+	public Date getCurrentDate() {
+		currentDate = new Date();
+		return currentDate;
+	}
+
+	/**
+	 * @param currentDate
+	 *            the currentDate to set
+	 */
+	public void setCurrentDate(Date currentDate) {
+		this.currentDate = currentDate;
+	}
 }

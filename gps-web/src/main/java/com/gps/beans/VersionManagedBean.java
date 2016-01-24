@@ -7,9 +7,11 @@ package com.gps.beans;
 
 import java.io.Serializable;
 import java.util.ResourceBundle;
+
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -21,36 +23,36 @@ import org.apache.log4j.Logger;
 @ApplicationScoped
 public class VersionManagedBean implements Serializable {
 
-    private static final Logger logger = Logger.getLogger(VersionManagedBean.class);
-    
-    private static String version;
-    private static String versionDate;
+	private static final Logger logger = Logger.getLogger(VersionManagedBean.class);
 
-    public VersionManagedBean() {
-    }
+	private static String version;
+	private static String versionDate;
 
-    @PostConstruct
-    public void init() {
-        try {
-            version = ResourceBundle.getBundle("version").getString("version");
-            versionDate = ResourceBundle.getBundle("version").getString("version_date");
-        } catch (Exception e) {
-            logger.error(e);
-        }        
-    }
+	public VersionManagedBean() {
+	}
 
-    /**
-     * @return the version
-     */
-    public String getVersion() {
-        return version;
-    }
+	@PostConstruct
+	public void init() {
+		try {
+			version = ResourceBundle.getBundle("version").getString("version");
+			versionDate = ResourceBundle.getBundle("version").getString("version_date");
+		} catch (Exception e) {
+			logger.error(e);
+		}
+	}
 
-    /**
-     * @return the versionDate
-     */
-    public String getVersionDate() {
-        return versionDate;
-    }
+	/**
+	 * @return the version
+	 */
+	public String getVersion() {
+		return version;
+	}
+
+	/**
+	 * @return the versionDate
+	 */
+	public String getVersionDate() {
+		return versionDate;
+	}
 
 }

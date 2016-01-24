@@ -1,83 +1,100 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-                template="/pages/public/SiTemplate.xhtml"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:pe="http://primefaces.org/ui/extensions">
+	template="/pages/public/SiTemplate.xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
 
-    <ui:define name="bodybar">
-        <h:panelGrid columns="1">
-            <h:outputText value="Gestion des Services"/>
-        </h:panelGrid>
-    </ui:define>
-
-
-    <ui:define name="body">
-
-        <h:form id="form">
-            <p:panel id="panellistCollaborateur">
-                <h:panelGrid columns="1" style="text-align: center;width: 100%">
-                    <p:commandButton id="viewButton" value="Envoyer un message" icon="ui-icon-mail-closed"   update=":listUtilisateurForm:display" oncomplete="carDialog.show()" />
-                </h:panelGrid>
-            </p:panel>
-        </h:form>
-
-        <br/>
-
-        <h:form id="listUtilisateurForm">
-
-            <p:dataTable id="listUtilisateurDataTable"
-                         value="#{serviceQueueManagedBean.listServicesQ}" emptyMessage="Aucun propriétaire trouvé !!"
-                         paginator="true" rows="20" var="item" paginatorPosition="bottom" styleClass="ui-datatable-center"
-                         sortBy="#{item.ordre}"  sortOrder="ascending"      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-                         rowsPerPageTemplate="5,10,20,50,100,200" rowKey="#{item.idServicequeue}">
-
-               
-
-                <p:column  headerText="Nom de Service"  >
-                    <h:outputText value="#{item.service.nomService}"  rendered="#{item.ordre ne null}"/>
-                </p:column>
+	<ui:define name="bodybar">
+		<h:panelGrid columns="1">
+			<h:outputText value="Gestion des Services" />
+		</h:panelGrid>
+	</ui:define>
 
 
-                <p:column  headerText="Classe de Service"  >
-                    <h:outputText value="#{item.service.classeService}"  rendered="#{item.ordre ne null}"/>
-                </p:column>
+	<ui:define name="body">
 
-                <p:column  headerText="Type de Service" >
-                    <h:outputText value="#{item.service.typeService}" rendered="#{item.ordre ne null}"/>
-                </p:column>
-                
-                 <p:column  headerText="Ordre de Service" >
-                     <h:outputText value="#{item.ordre}" rendered="#{item.ordre ne null}"/>
-                </p:column>
+		<h:form id="form">
+			<p:panel id="panellistCollaborateur">
+				<h:panelGrid columns="1" style="text-align: center;width: 100%">
+					<p:commandButton id="viewButton" value="Envoyer un message"
+						icon="ui-icon-mail-closed" update=":listUtilisateurForm:display"
+						oncomplete="carDialog.show()" />
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
 
-            </p:dataTable>
-            <p:dialog id="dialog" header="Veuillez saisir un message" widgetVar="carDialog" resizable="false"  
-                      width="420" height="430" showEffect="clip" hideEffect="fold">  
+		<br />
 
-                <h:panelGrid id="display" columns="2" cellpadding="4">  
-               
-                    <h:outputText value="Message :" />
-                    <p:inputTextarea counter="displaym" rows="10" cols="40" maxlength="400" value="#{sendSMSManagedBean.texte}" counterTemplate="{0} caractères restant" />
-                    <h:outputText id="displaym" />
-                    <br/>
-                    <br/>
-                    <h:outputText value="Description :" />
-                    <p:inputTextarea  rows="6" cols="40" maxlength="200" value="#{sendSMSManagedBean.description}"  />
-                    <h:outputText />
-                    <h:outputText />
-                    <h:outputText value="Destinataires :" />
-                    <p:inputText   value="#{sendSMSManagedBean.destinataires}"  style="width: 220px;" />
-                    <br/><br/>
-                    
-                    <p:commandButton value="Envoyer" actionListener="#{sendSMSManagedBean.sendSMS()}" />
+		<h:form id="listUtilisateurForm">
 
-                </h:panelGrid>  
-            </p:dialog>  
+			<p:dataTable id="listUtilisateurDataTable"
+				value="#{serviceQueueManagedBean.listServicesQ}"
+				emptyMessage="Aucun propriétaire trouvé !!" paginator="true"
+				rows="20" var="item" paginatorPosition="bottom"
+				styleClass="ui-datatable-center" sortBy="#{item.ordre}"
+				sortOrder="ascending"
+				paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+				rowsPerPageTemplate="5,10,20,50,100,200"
+				rowKey="#{item.idServicequeue}">
 
-        </h:form>
-    </ui:define>
+
+
+				<p:column headerText="Nom de Service">
+					<h:outputText value="#{item.service.nomService}"
+						rendered="#{item.ordre ne null}" />
+				</p:column>
+
+
+				<p:column headerText="Classe de Service">
+					<h:outputText value="#{item.service.classeService}"
+						rendered="#{item.ordre ne null}" />
+				</p:column>
+
+				<p:column headerText="Type de Service">
+					<h:outputText value="#{item.service.typeService}"
+						rendered="#{item.ordre ne null}" />
+				</p:column>
+
+				<p:column headerText="Ordre de Service">
+					<h:outputText value="#{item.ordre}"
+						rendered="#{item.ordre ne null}" />
+				</p:column>
+
+			</p:dataTable>
+			<p:dialog id="dialog" header="Veuillez saisir un message"
+				widgetVar="carDialog" resizable="false" width="420" height="430"
+				showEffect="clip" hideEffect="fold">
+
+				<h:panelGrid id="display" columns="2" cellpadding="4">
+
+					<h:outputText value="Message :" />
+					<p:inputTextarea counter="displaym" rows="10" cols="40"
+						maxlength="400" value="#{sendSMSManagedBean.texte}"
+						counterTemplate="{0} caractères restant" />
+					<h:outputText id="displaym" />
+					<br />
+					<br />
+					<h:outputText value="Description :" />
+					<p:inputTextarea rows="6" cols="40" maxlength="200"
+						value="#{sendSMSManagedBean.description}" />
+					<h:outputText />
+					<h:outputText />
+					<h:outputText value="Destinataires :" />
+					<p:inputText value="#{sendSMSManagedBean.destinataires}"
+						style="width: 220px;" />
+					<br />
+					<br />
+
+					<p:commandButton value="Envoyer"
+						actionListener="#{sendSMSManagedBean.sendSMS()}" />
+
+				</h:panelGrid>
+			</p:dialog>
+
+		</h:form>
+	</ui:define>
 </ui:composition>
 

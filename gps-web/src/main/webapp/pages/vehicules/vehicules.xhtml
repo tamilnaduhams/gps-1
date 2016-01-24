@@ -1,153 +1,201 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-                template="/pages/public/SiTemplate.xhtml"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:pe="http://primefaces.org/ui/extensions"> 
+	template="/pages/public/SiTemplate.xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
 
-    <ui:define name="title">
+	<ui:define name="title">
 
-        <h:outputText value="Gps"></h:outputText>
+		<h:outputText value="Gps"></h:outputText>
 
-    </ui:define>
+	</ui:define>
 
-    <ui:define name="bodybar">
+	<ui:define name="bodybar">
 
-        <h:panelGrid columns="1" dir="#{login.dir}">
-            <h:outputText value="Liste des véhicules"/>
-        </h:panelGrid>
+		<h:panelGrid columns="1" dir="#{login.dir}">
+			<h:outputText value="Liste des véhicules" />
+		</h:panelGrid>
 
-    </ui:define>
+	</ui:define>
 
-    <ui:define name="bodybarRight">
+	<ui:define name="bodybarRight">
 
-        <p:commandButton icon="ui-icon-plusthick" id="btnNouvVehicule" action="#{vehiculesManagedBean.prepareCreate()}"
-                         value="Nouveau véhicule" update=":createVehiculeForm" oncomplete="createVehiculeWidget.show();">
-        </p:commandButton>
+		<p:commandButton icon="ui-icon-plusthick" id="btnNouvVehicule"
+			action="#{vehiculesManagedBean.prepareCreate()}"
+			value="Nouveau véhicule" update=":createVehiculeForm"
+			oncomplete="createVehiculeWidget.show();">
+		</p:commandButton>
 
-        <p:tooltip for="btnNouvVehicule" value="Ajout d'un nouveau véhicule" showEffect="fade" hideEffect="fade"/>
+		<p:tooltip for="btnNouvVehicule" value="Ajout d'un nouveau véhicule"
+			showEffect="fade" hideEffect="fade" />
 
-    </ui:define>
+	</ui:define>
 
-    <ui:define name="body">
+	<ui:define name="body">
 
-        <h:form id="formVehicule">
+		<h:form id="formVehicule">
 
-            <p:spacer height="10"/>
-            <p:panel>
-                <p:dataTable id="listVehicule" styleClass="ui-datatable-center" value="#{vehiculesManagedBean.listVehicule}" var="item" 
-                             paginator="true" rows="10" paginatorPosition="bottom"
-                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" 
-                             emptyMessage="Aucun véhicule trouvé !!!">
+			<p:spacer height="10" />
+			<p:panel>
+				<p:dataTable id="listVehicule" styleClass="ui-datatable-center"
+					value="#{vehiculesManagedBean.listVehicule}" var="item"
+					paginator="true" rows="10" paginatorPosition="bottom"
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+					emptyMessage="Aucun véhicule trouvé !!!">
 
-                    <p:column headerText="Matricule" sortBy="#{item.matricule}">
-                        <h:outputText value="#{item.matricule}"/>
-                    </p:column>
-                    
-                    <p:column headerText="Marque" sortBy="#{item.marque}">
-                        <h:outputText value="#{item.marque}"/>
-                    </p:column>
+					<p:column headerText="Matricule" sortBy="#{item.matricule}">
+						<h:outputText value="#{item.matricule}" />
+					</p:column>
 
-                    <p:column headerText="Kilométrage réel" sortBy="#{item.kilometrageReel}">
-                        <h:outputText value="#{item.kilometrageReel}">
-                            <f:convertNumber minFractionDigits="0" type="number"/>
-                        </h:outputText>
-                    </p:column>
-                    
-                    <p:column headerText="Date de circulation" sortBy="#{item.dateCirculation}">
-                        <h:outputText value="#{item.dateCirculation}">
-                            <f:convertDateTime timeZone="#{defaultTimeZone.timeZone}" pattern="dd/MM/yyyy"/>
-                        </h:outputText>
-                    </p:column>           
-                    
-                    <p:column headerText="Boitier" sortBy="#{item.boitierAffecte.numBoitier}">
-                        <h:outputText value="#{item.boitierAffecte.numBoitier}">
-                            <f:convertNumber minFractionDigits="0" type="number"/>
-                        </h:outputText>
-                    </p:column>
-                    
-                    <p:column headerText="Chauffeur" >
-                        <h:outputText rendered="#{item.chauffeur != null}" value="#{item.chauffeur.prenom} #{item.chauffeur.nom}"></h:outputText>
-                        <h:outputText rendered="#{item.chauffeur eq null}" value="--"></h:outputText>
-                    </p:column>
+					<p:column headerText="Marque" sortBy="#{item.marque}">
+						<h:outputText value="#{item.marque}" />
+					</p:column>
 
-                    <p:column headerText="Actions" width="50">
+					<p:column headerText="Kilométrage réel"
+						sortBy="#{item.kilometrageReel}">
+						<h:outputText value="#{item.kilometrageReel}">
+							<f:convertNumber minFractionDigits="0" type="number" />
+						</h:outputText>
+					</p:column>
 
-                        <p:commandButton icon="ui-icon ui-icon-search" update=":createVehiculeForm" id="btnDetails" oncomplete="createVehiculeWidget.show();"> 
-                            <f:setPropertyActionListener value="#{item}" target="#{vehiculesManagedBean.selectedVehicule}"/>
-                        </p:commandButton>
+					<p:column headerText="Date de circulation"
+						sortBy="#{item.dateCirculation}">
+						<h:outputText value="#{item.dateCirculation}">
+							<f:convertDateTime timeZone="#{defaultTimeZone.timeZone}"
+								pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
 
-                        <p:commandButton icon="ui-icon ui-icon-trash" id="btnSupp" oncomplete="confirmation.show();">     
-                            <f:setPropertyActionListener value="#{item}" target="#{vehiculesManagedBean.selectedVehicule}"/>
-                        </p:commandButton>
+					<p:column headerText="Boitier"
+						sortBy="#{item.boitierAffecte.numBoitier}">
+						<h:outputText value="#{item.boitierAffecte.numBoitier}">
+							<f:convertNumber minFractionDigits="0" type="number" />
+						</h:outputText>
+					</p:column>
 
-                        <p:tooltip for="btnDetails" value="Modifier le véhicule" showEffect="fade" hideEffect="fade"/>
-                        <p:tooltip for="btnSupp" value="Supprimer le véhicule" showEffect="fade" hideEffect="fade"/>
-                    </p:column>
+					<p:column headerText="Chauffeur">
+						<h:outputText rendered="#{item.chauffeur != null}"
+							value="#{item.chauffeur.prenom} #{item.chauffeur.nom}"></h:outputText>
+						<h:outputText rendered="#{item.chauffeur eq null}" value="--"></h:outputText>
+					</p:column>
 
-                </p:dataTable>
-            </p:panel>
-        </h:form>
-    </ui:define>
+					<p:column headerText="Actions" width="50">
 
-    <ui:define  name="dialogbox">
+						<p:commandButton icon="ui-icon ui-icon-search"
+							update=":createVehiculeForm" id="btnDetails"
+							oncomplete="createVehiculeWidget.show();">
+							<f:setPropertyActionListener value="#{item}"
+								target="#{vehiculesManagedBean.selectedVehicule}" />
+						</p:commandButton>
 
-        <p:confirmDialog id="confirmations" message="Êtes vous sûr de bien vouloir procéder à la suppression de ce véhicule ?"  
-                         header="Suppression du véhicule" severity="alert" widgetVar="confirmation" appendToBody="true">  
-            <h:form>
+						<p:commandButton icon="ui-icon ui-icon-trash" id="btnSupp"
+							oncomplete="confirmation.show();">
+							<f:setPropertyActionListener value="#{item}"
+								target="#{vehiculesManagedBean.selectedVehicule}" />
+						</p:commandButton>
 
-                <p:commandButton id="confirm" value="Oui" update=":formVehicule:listVehicule" oncomplete="confirmation.hide()"  
-                                 actionListener="#{vehiculesManagedBean.destroy()}" ajax="false"/>
+						<p:tooltip for="btnDetails" value="Modifier le véhicule"
+							showEffect="fade" hideEffect="fade" />
+						<p:tooltip for="btnSupp" value="Supprimer le véhicule"
+							showEffect="fade" hideEffect="fade" />
+					</p:column>
 
-                <p:commandButton id="decline" value="Non" onclick="confirmation.hide();" type="button"/>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+	</ui:define>
 
-                <p:tooltip for="confirm" value="Valider" showEffect="fade" hideEffect="fade"/>
-                <p:tooltip for="decline" value="Annuler" showEffect="fade" hideEffect="fade"/>
+	<ui:define name="dialogbox">
 
-            </h:form>
-        </p:confirmDialog>
+		<p:confirmDialog id="confirmations"
+			message="Êtes vous sûr de bien vouloir procéder à la suppression de ce véhicule ?"
+			header="Suppression du véhicule" severity="alert"
+			widgetVar="confirmation" appendToBody="true">
+			<h:form>
 
-        <p:dialog closeOnEscape="true" resizable="false" id="createVehicule" appendToBody="true" closable="true" header="Véhicule" widgetVar="createVehiculeWidget" modal="true">
-            <h:form id="createVehiculeForm">
+				<p:commandButton id="confirm" value="Oui"
+					update=":formVehicule:listVehicule"
+					oncomplete="confirmation.hide()"
+					actionListener="#{vehiculesManagedBean.destroy()}" ajax="false" />
 
-                <p:panelGrid id="panelCreate" columns="2">
+				<p:commandButton id="decline" value="Non"
+					onclick="confirmation.hide();" type="button" />
 
-                    <p:outputLabel value="Matricule : " for="role"/>
-                    <p:inputText id="role" required="true" requiredMessage="Le champs matricule est obligatoire !!!" value="#{vehiculesManagedBean.selectedVehicule.matricule}" title="Matricule du véhicule"/>
+				<p:tooltip for="confirm" value="Valider" showEffect="fade"
+					hideEffect="fade" />
+				<p:tooltip for="decline" value="Annuler" showEffect="fade"
+					hideEffect="fade" />
 
-                    
-                     <p:outputLabel value="Marque : " for="mar"/>
-                    <p:inputText id="mar" value="#{vehiculesManagedBean.selectedVehicule.marque}" title="Marque du véhicule"/>
+			</h:form>
+		</p:confirmDialog>
 
-                    <p:outputLabel value="Date de circulation : " for="dateCirculation"/>
-                    <p:calendar id="dateCirculation"   locale="fr" value="#{vehiculesManagedBean.selectedVehicule.dateCirculation}" pattern="dd/MM/yyyy"/>
+		<p:dialog closeOnEscape="true" resizable="false" id="createVehicule"
+			appendToBody="true" closable="true" header="Véhicule"
+			widgetVar="createVehiculeWidget" modal="true">
+			<h:form id="createVehiculeForm">
 
-                    <p:outputLabel value="Kilométrage réel : " for="kr"/>
-                    <pe:inputNumber id="kr"  value="#{vehiculesManagedBean.selectedVehicule.kilometrageReel}" title="Kilométrage réel"/>
+				<p:panelGrid id="panelCreate" columns="2">
 
-                    <p:outputLabel value="Boitier : " for="bt"/>
-                    <p:selectOneMenu id="bt" value="#{vehiculesManagedBean.selectedVehicule.boitierAffecte}" effect="fade" converter="#{boitierConverter}">  
-                        
-                        <f:selectItems value="#{boitierManagedBean.listBoitier}" var="boitier" itemLabel="#{boitier.numBoitier}" itemValue="#{boitier}"/>  
-                    </p:selectOneMenu> 
-                    
-                    <p:outputLabel value="Chauffeur : " for="chauff"/>
-                    <p:selectOneMenu id="chauff" value="#{vehiculesManagedBean.selectedVehicule.chauffeur}" effect="fade" converter="#{chauffeurConverter}">  
-                        
-                        <f:selectItems value="#{chauffeurManagedBean.listChauffeur}" var="chauffeur" itemLabel="#{chauffeur.prenom} #{chauffeur.prenom}" itemValue="#{chauffeur}"/>  
-                    </p:selectOneMenu> 
-                    
-                </p:panelGrid>
-                <center>
-                    <p:commandButton id="btnValider" immediate="false" value="Valider" actionListener="#{vehiculesManagedBean.save()}" update=":formVehicule:listVehicule"/>
-                    <p:commandButton id="btnAnnuler" value="Annuler" type="reset" onclick="createVehiculeWidget.hide();"/>
+					<p:outputLabel value="Matricule : " for="role" />
+					<p:inputText id="role" required="true"
+						requiredMessage="Le champs matricule est obligatoire !!!"
+						value="#{vehiculesManagedBean.selectedVehicule.matricule}"
+						title="Matricule du véhicule" />
 
-                    <p:tooltip for="btnValider" value="Valider" showEffect="fade" hideEffect="fade"/>
-                    <p:tooltip for="btnAnnuler" value="Annuler" showEffect="fade" hideEffect="fade"/>
-                </center>
-            </h:form>
-        </p:dialog>
-    </ui:define>
+
+					<p:outputLabel value="Marque : " for="mar" />
+					<p:inputText id="mar"
+						value="#{vehiculesManagedBean.selectedVehicule.marque}"
+						title="Marque du véhicule" />
+
+					<p:outputLabel value="Date de circulation : " for="dateCirculation" />
+					<p:calendar id="dateCirculation" locale="fr"
+						value="#{vehiculesManagedBean.selectedVehicule.dateCirculation}"
+						pattern="dd/MM/yyyy" />
+
+					<p:outputLabel value="Kilométrage réel : " for="kr" />
+					<pe:inputNumber id="kr"
+						value="#{vehiculesManagedBean.selectedVehicule.kilometrageReel}"
+						title="Kilométrage réel" />
+
+					<p:outputLabel value="Boitier : " for="bt" />
+					<p:selectOneMenu id="bt"
+						value="#{vehiculesManagedBean.selectedVehicule.boitierAffecte}"
+						effect="fade" converter="#{boitierConverter}">
+
+						<f:selectItems value="#{boitierManagedBean.listBoitier}"
+							var="boitier" itemLabel="#{boitier.numBoitier}"
+							itemValue="#{boitier}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Chauffeur : " for="chauff" />
+					<p:selectOneMenu id="chauff"
+						value="#{vehiculesManagedBean.selectedVehicule.chauffeur}"
+						effect="fade" converter="#{chauffeurConverter}">
+
+						<f:selectItems value="#{chauffeurManagedBean.listChauffeur}"
+							var="chauffeur"
+							itemLabel="#{chauffeur.prenom} #{chauffeur.prenom}"
+							itemValue="#{chauffeur}" />
+					</p:selectOneMenu>
+
+				</p:panelGrid>
+				<center>
+					<p:commandButton id="btnValider" immediate="false" value="Valider"
+						actionListener="#{vehiculesManagedBean.save()}"
+						update=":formVehicule:listVehicule" />
+					<p:commandButton id="btnAnnuler" value="Annuler" type="reset"
+						onclick="createVehiculeWidget.hide();" />
+
+					<p:tooltip for="btnValider" value="Valider" showEffect="fade"
+						hideEffect="fade" />
+					<p:tooltip for="btnAnnuler" value="Annuler" showEffect="fade"
+						hideEffect="fade" />
+				</center>
+			</h:form>
+		</p:dialog>
+	</ui:define>
 </ui:composition>

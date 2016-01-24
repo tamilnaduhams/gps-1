@@ -1,624 +1,1058 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-                template="/pages/public/SiTemplate.xhtml"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:pe="http://primefaces.org/ui/extensions">
-
-    <ui:define name="bodybar">
-        <h:panelGrid columns="1">
-            <h:outputText value="Gestion des Services"/>
-        </h:panelGrid>
-    </ui:define>
-
-    <ui:define name="bodybarRight">
-        <p:commandButton id="addButton" value="Nouveau service web" icon="ui-icon-plusthick" action="#{serviceManagedBean.prepareCreate()}"  oncomplete="dialogwsCreate.show();" update=":createUserForm" />
-        <pe:tooltip for="addButton" value="Créer un nouveau propriétaire de marchandises" showEffect="fadeIn" hideEffect="fadeIn"/>
-    </ui:define>
-
-    <ui:define name="body">
-
-        <h:form id="form">
-            <p:panel id="panellistCollaborateur">
-                <h:panelGrid columns="1" style="text-align: center;width: 100%">
-                    <p:selectOneButton value="#{proprietaireManagedBean.etat}" >
-                        <f:selectItem id="btnTous" itemLabel="Tous les services" itemDescription="Tous les services " itemValue="default" />
-                    </p:selectOneButton>
-
-                </h:panelGrid>
-            </p:panel>
-        </h:form>
-
-        <br/>
-
-        <h:form id="listUtilisateurForm">
-
-            <p:dataTable id="listUtilisateurDataTable"
-                         value="#{serviceManagedBean.listServices}" emptyMessage="Aucun propriétaire trouvé !!"
-                         paginator="true" rows="20" var="item" paginatorPosition="bottom" styleClass="ui-datatable-center"
-                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-                         rowsPerPageTemplate="5,10,20,50,100,200" rowKey="#{item.idService}">
-
-                <p:ajax id="ajaxToggler" onstart="collapseOpenedRow();" event="rowToggle"/>
-                <p:column  headerText="" style="text-align: center">
-                    <p:rowToggler   />
-                </p:column>
-
-                <p:column sortBy="#{item.nomService}" headerText="Nom de Service">
-                    <h:outputText value="#{item.nomService}"/>
-                </p:column>
-
-
-                <p:column sortBy="#{item.classeService}" headerText="Classe de Service">
-                    <h:outputText value="#{item.classeService}"/>
-                </p:column>
-
-                <p:column sortBy="#{item.typeService}" headerText="Type de Service">
-                    <h:outputText value="#{item.typeService}"/>
-                </p:column>
-
-                <p:column headerText="Actions" width="100">
-
-                    <p:commandButton id="editButton" icon="ui-icon ui-icon-search" oncomplete="dialogEdit.show()" actionListener="#{serviceManagedBean.prepareEdit(item)}" update=":editUserForm" />
-
-                    <p:commandButton id="deleteButton" icon="ui-icon ui-icon-trash" onclick="confirmation.show();" >
-                        <f:setPropertyActionListener value="#{item}" target="#{serviceManagedBean.selectedService}"/>
-                    </p:commandButton>
-
-                    <p:commandButton id="addButtonAccount"  icon="ui-icon-plusthick" action="#{serviceManagedBean.prepareCreateAccount()}" oncomplete="dialogCompteCreate.show();" update=":createCompteForm" >
-                        <f:setPropertyActionListener value="#{item}" target="#{serviceManagedBean.selectedService}" />
-
-                    </p:commandButton>
-
-
-                    <pe:tooltip for="editButton" value="Editer le service" showEffect="fadeIn" hideEffect="fadeIn"/>
-                    <pe:tooltip for="deleteButton" value="Supprimer le service" showEffect="fadeIn" hideEffect="fadeIn"/>
-
-                </p:column>
-
-                <p:rowExpansion id="rowd">
-                  
-
-                    <p:dataTable    rowKey="#{a.accountId}" styleClass="mystyle"
-                                    value="#{item.accountList}" var="a" id="listeCompte" emptyMessage="Aucun compte pour ce service !"
-                                    paginator="true" rows="5" paginatorPosition="bottom" rowsPerPageTemplate="10,20,50"
-                                    paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
-
-                        <p:column  headerText="Login" rendered="#{item.urlService ne null}" >
-                            <h:outputText value="#{a.login}"  />
-                        </p:column>
-
-                        <p:column  headerText="Password" rendered="#{item.urlService ne null}" >
-                            <h:outputText value="#{a.password}" />
-                        </p:column>
-
-                        <p:column  headerText="Auth_Token" rendered="#{item.urlService ne null}" >
-                            <h:outputText value="#{a.authToken}" />
-                        </p:column>
-
-                        <p:column  headerText="Compte_WS_Secret" rendered="#{item.urlService ne null}" >
-                            <h:outputText value="#{a.compteWsSecret}"  />
-                        </p:column>
-
-                        <p:column  headerText="Balance" rendered="#{item.urlService ne null}" >
-                            <h:outputText value="#{a.balance}"  />
-                        </p:column>
-
-                        <p:column  headerText="URL service" rendered="#{item.urlService ne null}" >
-                            <h:outputText value="#{item.urlService}"  />
-                        </p:column>
-
-                        <p:column  headerText="Nom constructeur" rendered="#{item.urlService eq null}" >
-                            <h:outputText value="#{a.nomConstructeur}"  />
-                        </p:column>
-
-                        <p:column  headerText="Version modem" rendered="#{item.urlService eq null}" >
-                            <h:outputText value="#{a.versionModem}"  />
-                        </p:column>
-
-                        <p:column  headerText="Modem Port" rendered="#{item.urlService eq null}" >
-                            <h:outputText value="#{a.modemPort}"  />
-                        </p:column>
-
-                        <p:column  headerText="N° Port" rendered="#{item.urlService eq null}" >
-                            <h:outputText value="#{a.numPort}"  />
-                        </p:column>
-
-                        <p:column  headerText="Vitesse Max du Port" rendered="#{item.urlService eq null}" >
-                            <h:outputText value="#{a.vitesseMaxPort}"  />
-                        </p:column>
-
-                        <p:column  headerText="N° Téléphone"  >
-                            <h:outputText value="#{a.numTel}"  />
-                        </p:column>
-
-                        <p:column  headerText="N° Centre du service" rendered="#{item.urlService eq null}">
-                            <h:outputText value="#{a.numCentreService}"  />
-                        </p:column>
-                        
-                        <p:column  headerText="Coût SMS" rendered="#{item.coutSmsCalc ne 'non'}">
-                            <h:outputText value="#{a.coutSms}"  />
-                        </p:column>
-
-
-                        <p:column headerText="Actions" width="50">
-
-                            <p:commandButton id="editButtonc" icon="ui-icon ui-icon-search" oncomplete="dialogAccountEdit.show()" actionListener="#{serviceManagedBean.prepareEditAccount(selectedAccount)}" update=":editAccountForm" >
-                                <f:setPropertyActionListener value="#{a}" target="#{serviceManagedBean.selectedAccount}" />
-                            </p:commandButton>
-
-                            <p:commandButton id="deleteButtonc" icon="ui-icon ui-icon-trash" onclick="confirmationCompte.show();"  >
-                                <f:setPropertyActionListener value="#{a}" target="#{serviceManagedBean.selectedAccount}"/>
-                                <f:setPropertyActionListener value="#{item}" target="#{serviceManagedBean.selectedService}" />
-                               
-                            </p:commandButton>
-
-                            <pe:tooltip for="editButtonc" value="Editer le compte" showEffect="fadeIn" hideEffect="fadeIn"/>
-                            <pe:tooltip for="deleteButtonc" value="Supprimer le compte" showEffect="fadeIn" hideEffect="fadeIn"/>
-
-                        </p:column>
-
-
-                    </p:dataTable>
-                </p:rowExpansion>
-            </p:dataTable>
-
-        </h:form>
-    </ui:define>
-
-
-    <ui:define name="dialogbox">
-
-        <p:confirmDialog id="confirmDialog" message="Êtes vous sûr de bien vouloir supprimer définitivement ce service ?"
-                         header="Suppression de ce service" severity="alert" widgetVar="confirmation" appendTo="@(body)">
-            <h:form>
-                <center>
-                    <p:commandButton id="confirm" value="Oui" update=":listUtilisateurForm" oncomplete="confirmation.hide()"
-                                     actionListener="#{serviceManagedBean.destroy()}" />
-                    <p:commandButton id="decline" value="Non" onclick="confirmation.hide();" type="button"/>
-                </center>
-                <p:tooltip for="confirm" value="Valider l'opération de suppression de ce service" showEffect="fadeIn" hideEffect="fadeIn"/>
-                <p:tooltip for="decline" value="Annuler l'opération de suppression de ce service" showEffect="fadeIn" hideEffect="fadeIn"/>
-            </h:form>
-        </p:confirmDialog>
-
-
-        <p:confirmDialog id="confirmDialogCompte" message="Êtes vous sûr de bien vouloir supprimer définitivement ce compte ?"
-                         header="Suppression de ce service" severity="alert" widgetVar="confirmationCompte" appendTo="@(body)">
-            <h:form id="formDeleteCompte">
-                <center>
-                    <p:commandButton id="confirmCompte" immediate="false" value="Oui" update=":listUtilisateurForm:listUtilisateurDataTable" oncomplete="confirmationCompte.hide()" action="#{serviceManagedBean.destroyAccount()}" >                       
-                    </p:commandButton>
-                    <p:commandButton id="declineCompte" value="Non" onclick="confirmationCompte.hide();" type="button"/>
-                </center>
-                <p:tooltip for="confirmCompte" value="Valider l'opération de suppression de ce compte" showEffect="fadeIn" hideEffect="fadeIn"/>
-                <p:tooltip for="declineCompte" value="Annuler l'opération de suppression de ce compte" showEffect="fadeIn" hideEffect="fadeIn"/>
-            </h:form>
-        </p:confirmDialog>
-
-
-        <p:dialog closeOnEscape="true" id="choixDialogForm" widgetVar="dialogChoixCreate" header="Veuillez choisir un service" appendTo="@(body)" modal="true"  resizable="false">
-            <h:form >
-
-                <p:separator/>
-                <center>
-                    <p:commandButton  immediate="false" value="Service Modem" oncomplete="dialogCreate.show();"  onclick="dialogChoixCreate.hide();"   />
-                    <p:commandButton immediate="false" value="Service WS"  onclick="dialogChoixCreate.hide();" oncomplete="dialogwsCreate.show();"/>
-
-
-                </center>
-
-            </h:form>
-        </p:dialog>
-
-        <p:dialog closeOnEscape="true" id="createDialogForm" widgetVar="dialogCreate" header="Création d'un nouveau service modem" appendTo="@(body)" modal="true"  resizable="false">
-            <h:form id="createUserForm">
-                <br/>
-                <p:panelGrid id="panelcreate" columns="2">
-
-                    <p:outputLabel value="Nom du service : " for="nom"/>
-                    <p:inputText id="nom" title="Nom du service" value="#{serviceManagedBean.selectedService.nomService}" required="true" requiredMessage="Le champ nom service est obligatoire !" />
-
-                    <p:outputLabel value="Type du service : " for="type"/>
-                    <p:inputText id="type" title="Type du nouveau service" value="#{serviceManagedBean.selectedService.typeService}"  required="true" requiredMessage="Le champ type du service est obligatoire !" />
-
-                    <p:outputLabel value="Classe du service : " for="classe"/>
-                    <p:inputText id="classe" title="Classe du nouveau service" value="#{serviceManagedBean.selectedService.classeService}"  required="true" requiredMessage="Le champ classe du service est obligatoire !" />
-
-
-
-                </p:panelGrid>
-                <br/>
-                <p:separator/>
-                <center>
-                    <p:commandButton id="valider1"  immediate="false" value="Valider" action="#{serviceManagedBean.create()}"  update=":listUtilisateurForm:listUtilisateurDataTable :createUserForm"/>
-                    <p:commandButton id="annuler1" value="Annuler" type="reset" onclick="dialogCreate.hide();"/>
-
-                    <pe:tooltip for="valider1"  value="Valider l'opération de création d'un nouveau service" showEffect="fadeIn" hideEffect="fadeIn"/>
-                    <pe:tooltip for="annuler1" value="Annuler l'opération de création d'un nouveau service" showEffect="fadeIn" hideEffect="fadeIn"/>
-                </center>
-
-            </h:form>
-        </p:dialog>
-
-
-
-
-
-        <!-- Create Account -->
-
-        <p:dialog closeOnEscape="true" id="createDialogCompteForm" widgetVar="dialogCompteCreate" header="Création d'un nouveau compte" appendTo="@(body)" modal="true"  resizable="false">
-            <h:form id="createCompteForm">
-                <br/>
-                <p:panelGrid id="panelcreateCompte" columns="2">
-
-                    <h:outputLabel value="Login :" for="loginaccount" rendered="#{serviceManagedBean.selectedService.urlService ne null}" />
-                    <p:inputText id="loginaccount" title="Login" value="#{serviceManagedBean.selectedAccount.login}" rendered="#{serviceManagedBean.selectedService.urlService ne null}" required="true" requiredMessage="Le champ Login est obligatoire !" />
-
-
-                    <h:outputLabel value="Password :" for="passwordaccount" rendered="#{serviceManagedBean.selectedService.urlService ne null}" />
-                    <p:password id="passwordaccount" title="Password" value="#{serviceManagedBean.selectedAccount.password}" rendered="#{serviceManagedBean.selectedService.urlService ne null}" required="true" requiredMessage="Le champ Password est obligatoire !" />
-
-                    <h:outputLabel value="Auth_Token :" for="authtoken" rendered="#{serviceManagedBean.selectedService.urlService ne null}" />
-                    <p:inputText id="authtoken" title="Auth_Token" value="#{serviceManagedBean.selectedAccount.authToken}" rendered="#{serviceManagedBean.selectedService.urlService ne null}" />
-
-
-                    <h:outputLabel value="Compte WS Secret :" for="wssecret" rendered="#{serviceManagedBean.selectedService.urlService ne null}" />
-                    <p:inputText id="wssecret" title="Compte WS Secret" value="#{serviceManagedBean.selectedAccount.compteWsSecret}" rendered="#{serviceManagedBean.selectedService.urlService ne null}" />
-
-                    <h:outputLabel value="Balance :" for="balance" rendered="#{serviceManagedBean.selectedService.urlService ne null}" />
-                    <p:inputText id="balance" title="Balance" value="#{serviceManagedBean.selectedAccount.balance}" rendered="#{serviceManagedBean.selectedService.urlService ne null}" />
-
-                    <h:outputLabel value="Nom constructeur :" for="constructeur" rendered="#{serviceManagedBean.selectedService.urlService eq null}" />
-                    <p:inputText id="constructeur" title="Nom Constructeur" value="#{serviceManagedBean.selectedAccount.nomConstructeur}" rendered="#{serviceManagedBean.selectedService.urlService eq null}" required="true" requiredMessage="Le champ Nom constructeur est obligatoire !" />
-
-
-                    <h:outputLabel value="Version modem :" for="vmodem" rendered="#{serviceManagedBean.selectedService.urlService eq null}" />
-                    <p:inputText id="vmodem" title="Version modem" value="#{serviceManagedBean.selectedAccount.versionModem}" rendered="#{serviceManagedBean.selectedService.urlService eq null}" required="true" requiredMessage="Le champ Version modem est obligatoire !" />
-
-                    <h:outputLabel value="Modem Port :" for="mport" rendered="#{serviceManagedBean.selectedService.urlService eq null}" />
-                    <p:inputText id="mport" title="Modem Port" value="#{serviceManagedBean.selectedAccount.modemPort}" rendered="#{serviceManagedBean.selectedService.urlService eq null}" required="true" requiredMessage="Le champ Modem port est obligatoire !" />
-
-                    <h:outputLabel value="N° ¨Port :" for="nport" rendered="#{serviceManagedBean.selectedService.urlService eq null}" />
-                    <p:inputText id="nport" title="N° Port" value="#{serviceManagedBean.selectedAccount.numPort}" rendered="#{serviceManagedBean.selectedService.urlService eq null}" required="true" requiredMessage="Le champ N° port est obligatoire" />
-
-                    <h:outputLabel value="Vitesse Max Port :" for="vmaxport" rendered="#{serviceManagedBean.selectedService.urlService eq null}" />
-                    <p:inputText id="vmaxport" title="Vitesse Max Port" value="#{serviceManagedBean.selectedAccount.vitesseMaxPort}" rendered="#{serviceManagedBean.selectedService.urlService eq null}" required="true" requiredMessage="Le champ Vitesse Max Port est obligatoire !" />
-
-                    <h:outputLabel value="N° Téléphone :" for="ntel"  />
-                    <p:inputMask id="ntel" title="N° Téléphone" placeHolder=""  mask="+99999999999" value="#{serviceManagedBean.selectedAccount.numTel}" required="true" requiredMessage="Le champ N° Téléphone est obligatoire !" />
-
-                    <h:outputLabel value="N° Centre du service :" for="ncentre" rendered="#{serviceManagedBean.selectedService.urlService eq null}" />
-                    <p:inputText id="ncentre" title="N° Centre du service" value="#{serviceManagedBean.selectedAccount.numCentreService}" rendered="#{serviceManagedBean.selectedService.urlService eq null}" />
-
-
-                    <h:outputLabel value="Coût SMS :" for="couts" rendered="#{serviceManagedBean.selectedService.coutSmsCalc ne 'non'}" />
-                    <p:inputText id="couts" title="Coût SMS" value="#{serviceManagedBean.selectedAccount.coutSms}" rendered="#{serviceManagedBean.selectedService.coutSmsCalc ne 'non'}" />
-
-                    
-                    
-                </p:panelGrid>
-                <br/>
-                <p:separator/>
-                <center>
-                    <p:commandButton id="valider9"     value="Valider" action="#{serviceManagedBean.createAccount}"  update=":listUtilisateurForm:listUtilisateurDataTable :createCompteForm">
-                        <f:setPropertyActionListener target="#{serviceManagedBean.selectedAccount.idService}" value="#{serviceManagedBean.selectedService}" />
-                       
-                    </p:commandButton>
-
-                    <p:commandButton id="annuler9" value="Annuler" type="reset" onclick="dialogCompteCreate.hide();"/>
-
-                    <pe:tooltip for="valider9"  value="Valider l'opération de création d'un nouveau service" showEffect="fadeIn" hideEffect="fadeIn"/>
-                    <pe:tooltip for="annuler9" value="Annuler l'opération de création d'un nouveau service" showEffect="fadeIn" hideEffect="fadeIn"/>
-                </center>
-
-            </h:form>
-        </p:dialog>
-
-        <!-- ws -->
-
-        <p:dialog closeOnEscape="true" id="createDialogwsForm" widgetVar="dialogwsCreate" header="Création d'un nouveau service web" appendTo="@(body)" modal="true"  resizable="false">
-            <h:form id="createUserForms">
-                <br/>
-                <p:panelGrid id="panelcreates" columns="2">
-
-                    <p:outputLabel value="Nom du service : " for="noms"/>
-                    <p:inputText id="noms" title="Nom du service" value="#{serviceManagedBean.selectedService.nomService}" required="true" requiredMessage="Le champ nom service est obligatoire !" />
-
-                    <p:outputLabel value="Type du service : " for="types"/>
-                    <p:selectOneMenu style="width: 160px;" id="types" value="#{serviceManagedBean.selectedService.typeService}" required="true" requiredMessage="Le champ type du service est obligatoire !">
-                      <f:selectItem itemLabel="Sélectionnez une" itemValue="" />
-                      <f:selectItem itemLabel="ServiceWeb" itemValue="ServiceWeb" />  
-                      <f:selectItem itemLabel="ServiceModem" itemValue="ServiceModem"  />
-                    </p:selectOneMenu>
-                     
-                    <p:outputLabel value="URL du service : " for="urls"/>
-                    <p:inputText id="urls" title="Type du nouveau service" value="#{serviceManagedBean.selectedService.urlService}"  required="true" requiredMessage="Le champ type du service est obligatoire !" />
-
-                    <p:outputLabel value="Classe du service : " for="classes"/>
-                    <p:inputText id="classes" title="Type du nouveau service" value="#{serviceManagedBean.selectedService.classeService}"  required="true" requiredMessage="Le champ classe du service est obligatoire !" />
-                    
-                    <p:outputLabel value="Coût saisie : " for="cout"/>
-                    <p:selectOneMenu id="cout" style="width: 160px;" value="#{serviceManagedBean.selectedService.coutSmsCalc}">
-                        <f:selectItem itemLabel="Sélectionnez une" itemValue="#{null}" />
-                        <f:selectItem itemLabel="oui" itemValue="oui" />  
-                        <f:selectItem itemLabel="non"  itemValue="non"  />
-                    </p:selectOneMenu>
-
-
-                </p:panelGrid>
-                <br/>
-                <p:separator/>
-                <center>
-                    <p:commandButton id="valider2"  immediate="false" value="Valider" action="#{serviceManagedBean.create()}"  update=":listUtilisateurForm:listUtilisateurDataTable :createUserForms"/>
-                    <p:commandButton id="annuler2" value="Annuler" type="reset" onclick="dialogwsCreate.hide();"/>
-
-                    <pe:tooltip for="valider2"  value="Valider l'opération de création d'un nouveau service" showEffect="fadeIn" hideEffect="fadeIn"/>
-                    <pe:tooltip for="annuler2" value="Annuler l'opération de création d'un nouveau service" showEffect="fadeIn" hideEffect="fadeIn"/>
-                </center>
-
-            </h:form>
-        </p:dialog>
-
-        <!-- edit compte -->
-
-        <p:dialog closeOnEscape="true" id="editAccountDialogForm" widgetVar="dialogAccountEdit" header="Mise à jour du compte" appendTo="@(body)" modal="true"  resizable="false">
-            <h:form id="editAccountForm">
-                <p:panelGrid id="panelAccountEdit" columns="2">
-
-                    <p:outputLabel value="Login : " rendered="#{serviceManagedBean.selectedAccount.login ne null}"  />
-                    <p:inputText  title="Login du nouveau compte" value="#{serviceManagedBean.selectedAccount.login}" rendered="#{serviceManagedBean.selectedAccount.login ne null}"  required="true" requiredMessage="Le champ login est obligatoire !" />
-
-                    <p:outputLabel value="Password : "  rendered="#{serviceManagedBean.selectedAccount.login ne null}"/>
-                    <p:inputText  title="Password du nouveau compte" value="#{serviceManagedBean.selectedAccount.password}" rendered="#{serviceManagedBean.selectedAccount.login ne null}" required="true" requiredMessage="Le champ password est obligatoire !" />
-
-                    <p:outputLabel value="Auth_Token : " rendered="#{serviceManagedBean.selectedAccount.login ne null}" />
-                    <p:inputText  title="Auth_Token du nouveau compte" value="#{serviceManagedBean.selectedAccount.authToken}"  rendered="#{serviceManagedBean.selectedAccount.login ne null}" />
-
-                    <p:outputLabel value="Compte WS Secret : " rendered="#{serviceManagedBean.selectedAccount.login ne null}" />
-                    <p:inputText  title="WS Secret du nouveau compte" value="#{serviceManagedBean.selectedAccount.compteWsSecret}" rendered="#{serviceManagedBean.selectedAccount.login ne null}"  />
-
-                    <p:outputLabel value="Balance : "  rendered="#{serviceManagedBean.selectedAccount.login ne null}"/>
-                    <p:inputText  title="Balance du nouveau compte" value="#{serviceManagedBean.selectedAccount.balance}" rendered="#{serviceManagedBean.selectedAccount.login ne null}"  />
-
-                    <p:outputLabel value="Nom constructeur : "  rendered="#{serviceManagedBean.selectedAccount.login eq null}"/>
-                    <p:inputText  title="Nom constructeur" value="#{serviceManagedBean.selectedAccount.nomConstructeur}" rendered="#{serviceManagedBean.selectedAccount.login eq null}" required="true" requiredMessage="Le champ Nom constructeur est obligatoire !"  />
-
-
-                    <p:outputLabel value="Version modem : "  rendered="#{serviceManagedBean.selectedAccount.login eq null}"/>
-                    <p:inputText  title="version modem" value="#{serviceManagedBean.selectedAccount.versionModem}" rendered="#{serviceManagedBean.selectedAccount.login eq null}" required="true" requiredMessage="Le champ Version modem est obligatoire !"  />
-
-
-                    <p:outputLabel value="Modem Port : "  rendered="#{serviceManagedBean.selectedAccount.login eq null}"/>
-                    <p:inputText  title="Modem Port" value="#{serviceManagedBean.selectedAccount.modemPort}" rendered="#{serviceManagedBean.selectedAccount.login eq null}" required="true" requiredMessage="Le champ Modem Port est obligatoire !"  />
-
-                    <p:outputLabel value="N° Port : "  rendered="#{serviceManagedBean.selectedAccount.login eq null}"/>
-                    <p:inputText  title="N° Port" value="#{serviceManagedBean.selectedAccount.numPort}" rendered="#{serviceManagedBean.selectedAccount.login eq null}" required="true" requiredMessage="Le champ N° Port est obligatoire !"  />
-
-                    <p:outputLabel value="Vitesse Max du port : "  rendered="#{serviceManagedBean.selectedAccount.login eq null}"/>
-                    <p:inputText  title="Vitesse Max Port" value="#{serviceManagedBean.selectedAccount.vitesseMaxPort}" rendered="#{serviceManagedBean.selectedAccount.login eq null}" required="true" requiredMessage="Le champ Vitesse Max du Port est obligatoire !" />
-
-
-                    <p:outputLabel value="N° Téléphone : " />
-                    <p:inputText  title="N° Téléphone" value="#{serviceManagedBean.selectedAccount.numTel}"   />
-
-                    <p:outputLabel value="N° Centre du service : "  rendered="#{serviceManagedBean.selectedAccount.login eq null}"/>
-                    <p:inputText  title="N° Centre du service" value="#{serviceManagedBean.selectedAccount.numCentreService}" rendered="#{serviceManagedBean.selectedAccount.login eq null}"  />
-
-
-
-                </p:panelGrid>
-
-                <br/>
-                <p:separator/>
-                <center>
-                    <p:commandButton id="valider7" immediate="false" value="Valider" onclick="dialogAccountEdit.hide();" action="#{serviceManagedBean.updateAccount()}" update=":listUtilisateurForm" >
-                    </p:commandButton>
-                    <p:commandButton id="annuler7" value="Annuler" type="reset" onclick="dialogAccountEdit.hide();"/>
-
-                    <pe:tooltip for="valider7" value="Valider l'opération de modification de ce propriétaire"  showEffect="fadeIn" hideEffect="fadeIn"/>
-                    <pe:tooltip for="annuler7" value="Annuler l'opération de modification de ce propriétaire" showEffect="fadeIn" hideEffect="fadeIn"/>
-                </center>
-
-            </h:form>
-        </p:dialog>
-
-
-
-
-
-
-
-        <p:dialog closeOnEscape="true" id="editDialogForm" widgetVar="dialogEdit" header="Mise à jour du propriétaire" appendTo="@(body)" modal="true"  resizable="false">
-            <h:form id="editUserForm">
-                <p:panelGrid id="panelEdit" columns="2">
-
-                    <p:outputLabel value="Nom de service : " />
-                    <p:inputText  title="Nom du nouveau service" value="#{serviceManagedBean.selectedService.nomService}" required="true" requiredMessage="Le champ prénom est obligatoire !" />
-
-                    <p:outputLabel value="Type de service : " />
-                    <p:inputText  title="Type du nouveau service" value="#{serviceManagedBean.selectedService.typeService}"  required="true" requiredMessage="Le champ nom est obligatoire !" />
-
-                    <p:outputLabel value="Classe de service : " />
-                    <p:inputText  title="Classe du nouveau service" value="#{serviceManagedBean.selectedService.classeService}"  required="true" requiredMessage="Le champ nom est obligatoire !" />
-
-
-                </p:panelGrid>
-
-                <br/>
-                <p:separator/>
-                <center>
-                    <p:commandButton id="valider" immediate="false" value="Valider" action="#{serviceManagedBean.update()}" update=":listUtilisateurForm :editUserForm"/>
-                    <p:commandButton id="annuler" value="Annuler" type="reset" onclick="dialogEdit.hide();"/>
-
-                    <pe:tooltip for="valider" value="Valider l'opération de modification de ce propriétaire" showEffect="fadeIn" hideEffect="fadeIn"/>
-                    <pe:tooltip for="annuler" value="Annuler l'opération de modification de ce propriétaire" showEffect="fadeIn" hideEffect="fadeIn"/>
-                </center>
-
-            </h:form>
-        </p:dialog>
-
-
-
-
-        <p:dialog id="detailsVehiculeDialog" header="Détails de véhicule" widgetVar="updateVehiculeWidget" showEffect="fade" hideEffect="explode" modal="true" resizable="false">
-            <h:form id="DetailsVehiculeForm">
-
-                <p:outputPanel id="DetailsVehicule">
-
-                    <h:panelGrid id="display" columns="2" cellpadding="3" style="margin:0 auto;">
-                        <p:graphicImage style="padding-right: 15px;" width="50" value="#{marqueManagedBean.findLogoMarque(proprietaireManagedBean.selectedMarchandise.idModele.idMarque)}"/>
-                        <h:panelGrid id="diay" columns="2" cellpadding="3" style="margin:0 auto;">
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idModele.libelle ne null}" value="Modèle : " />
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idModele.libelle ne null}" value="#{proprietaireManagedBean.selectedMarchandise.idModele.libelle}" style="font-weight:bold"/>
-
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idCarburant.libelle ne null}" value="Carburant :" />
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idCarburant.libelle ne null}" value="#{proprietaireManagedBean.selectedMarchandise.idCarburant.libelle}" style="font-weight:bold"/>
-
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.matricule ne null}" value="Matricule : " />
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.matricule ne null}" value="#{proprietaireManagedBean.selectedMarchandise.matricule}" style="font-weight:bold"/>
-
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idCouleur.libelle ne null}" value="Couleur : " />
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idCouleur.libelle ne null}" value="#{proprietaireManagedBean.selectedMarchandise.idCouleur.libelle}" style="font-weight:bold"/>
-
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.numChassis ne null}" value="Chassis : " />
-                            <h:outputText rendered="#{marchandiseManagedBean.selectedMarchandise.numChassis ne null}" value="#{proprietaireManagedBean.selectedMarchandise.numChassis}" style="font-weight:bold"/>
-
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.puissance ne null}" value="Puissance : " />
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.puissance ne null}" value="#{proprietaireManagedBean.selectedMarchandise.puissance} CV" style="font-weight:bold"/>
-
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.description ne null}" value="Description : " />
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.description ne null}" value="#{proprietaireManagedBean.selectedMarchandise.description}" style="font-weight:bold"/>
-                        </h:panelGrid>
-                    </h:panelGrid>
-                    <p:separator/>
-                    <h:panelGrid id="disp" columns="2" cellpadding="3" style="margin:0 auto;">
-
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.idDepartement.libelle ne null}" value="Département : " />
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.idDepartement.libelle ne null}" value="#{proprietaireManagedBean.selectedMarchandise.idRegime.idDepartement.libelle}" style="font-weight:bold"/>
-
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.idTypeRegime.libelle ne null}" value="Type du régime :" />
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.idTypeRegime.libelle ne null}" value="#{proprietaireManagedBean.selectedMarchandise.idRegime.idTypeRegime.libelle}" style="font-weight:bold"/>
-
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.libelle ne null}" value="Régime : " />
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.libelle ne null}" value="#{proprietaireManagedBean.selectedMarchandise.idRegime.libelle}" style="font-weight:bold"/>
-
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.identifiant ne null}" value="Identifiant : " />
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.identifiant ne null}" value="#{proprietaireManagedBean.selectedMarchandise.identifiant}" style="font-weight:bold"/>
-
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idPlaceMagasin ne null}" value="Place : " />
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idPlaceMagasin ne null}" value="#{proprietaireManagedBean.selectedMarchandise.idPlaceMagasin.numPlace}" style="font-weight:bold"/>
-
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.poidsLourd ne null}" value="Engin lourd : " />
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.poidsLourd and proprietaireManagedBean.selectedMarchandise.poidsLourd ne null}" value="Oui" style="font-weight:bold"/>
-                        <h:outputText rendered="#{!proprietaireManagedBean.selectedMarchandise.poidsLourd and proprietaireManagedBean.selectedMarchandise.poidsLourd ne null}" value="Non" style="font-weight:bold"/>
-
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idProprietaire ne null}" value="Propriétaire :" />
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idProprietaire ne null}" value="#{proprietaireManagedBean.selectedMarchandise.idProprietaire.prenom} #{marchandiseManagedBean.selectedMarchandise.idProprietaire.nom}" style="font-weight:bold"/>
-
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idPays.nom ne null}" value="Pays d'import : " />
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idPays.nom ne null}" value="#{proprietaireManagedBean.selectedMarchandise.idPays.nom}" style="font-weight:bold"/>
-
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.dateArriveeCargot ne null}" value="Arrivée au cargot : " />
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.dateArriveeCargot ne null}" value="#{proprietaireManagedBean.selectedMarchandise.dateArriveeCargot}" style="font-weight:bold">
-                            <f:convertDateTime timeZone="#{defaultTimeZone.timeZone}" pattern="dd/MM/yyyy"/>
-                        </h:outputText>
-
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.dateEntreeMagasin ne null}" value="Entrée au magasin : " />
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.dateEntreeMagasin ne null}" value="#{proprietaireManagedBean.selectedMarchandise.dateEntreeMagasin}" style="font-weight:bold">
-                            <f:convertDateTime timeZone="#{defaultTimeZone.timeZone}" pattern="dd/MM/yyyy"/>
-                        </h:outputText>
-
-                    </h:panelGrid>
-                    <p:separator/>
-                </p:outputPanel>
-
-                <center>
-                    <p:commandButton id="declinee" onclick="updateVehiculeWidget.hide();" type="reset" value="Ok"/>
-                    <p:tooltip for="declinee" value="Fermer ce dialogue" showEffect="fade" hideEffect="fade"/>
-                </center>
-            </h:form>
-        </p:dialog>
-
-        <p:dialog id="detailsArticleDialog" header="Détails de l'article" widgetVar="updateArticleWidget" showEffect="fade" hideEffect="explode" modal="true" resizable="false">
-            <h:form id="DetailsArticleForm">
-                <p:outputPanel id="Detailsarticle">
-
-                    <h:panelGrid id="display" columns="2" cellpadding="3" style="margin:0 auto;">
-                        <p:graphicImage style="padding-right: 15px;" width="50" value="#{marqueManagedBean.findLogoMarque(proprietaireManagedBean.selectedMarchandise.idModele.idMarque)}"/>
-                        <h:panelGrid id="diay" columns="2" cellpadding="3" style="margin:0 auto;">
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idModele.libelle ne null}" value="Modèle : " />
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idModele.libelle ne null}" value="#{proprietaireManagedBean.selectedMarchandise.idModele.libelle}" style="font-weight:bold"/>
-
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idCarburant.libelle ne null}" value="Carburant :" />
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idCarburant.libelle ne null}" value="#{proprietaireManagedBean.selectedMarchandise.idCarburant.libelle}" style="font-weight:bold"/>
-
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.matricule ne null}" value="Matricule : " />
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.matricule ne null}" value="#{proprietaireManagedBean.selectedMarchandise.matricule}" style="font-weight:bold"/>
-
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idCouleur.libelle ne null}" value="Couleur : " />
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idCouleur.libelle ne null}" value="#{proprietaireManagedBean.selectedMarchandise.idCouleur.libelle}" style="font-weight:bold"/>
-
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.numChassis ne null}" value="Chassis : " />
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.numChassis ne null}" value="#{proprietaireManagedBean.selectedMarchandise.numChassis}" style="font-weight:bold"/>
-
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.puissance ne null}" value="Puissance : " />
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.puissance ne null}" value="#{proprietaireManagedBean.selectedMarchandise.puissance} CV" style="font-weight:bold"/>
-
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.description ne null}" value="Description : " />
-                            <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.description ne null}" value="#{proprietaireManagedBean.selectedMarchandise.description}" style="font-weight:bold"/>
-                        </h:panelGrid>
-                    </h:panelGrid>
-                    <p:separator/>
-                    <h:panelGrid id="disp" columns="2" cellpadding="3" style="margin:0 auto;">
-
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.idDepartement.libelle ne null}" value="Département : " />
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.idDepartement.libelle ne null}" value="#{proprietaireManagedBean.selectedMarchandise.idRegime.idDepartement.libelle}" style="font-weight:bold"/>
-
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.idTypeRegime.libelle ne null}" value="Type du régime :" />
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.idTypeRegime.libelle ne null}" value="#{proprietaireManagedBean.selectedMarchandise.idRegime.idTypeRegime.libelle}" style="font-weight:bold"/>
-
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.libelle ne null}" value="Régime : " />
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.libelle ne null}" value="#{proprietaireManagedBean.selectedMarchandise.idRegime.libelle}" style="font-weight:bold"/>
-
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.identifiant ne null}" value="Identifiant : " />
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.identifiant ne null}" value="#{proprietaireManagedBean.selectedMarchandise.identifiant}" style="font-weight:bold"/>
-
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idPlaceMagasin ne null}" value="Place : " />
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idPlaceMagasin ne null}" value="#{proprietaireManagedBean.selectedMarchandise.idPlaceMagasin.numPlace}" style="font-weight:bold"/>
-
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.poidsLourd ne null}" value="Engin lourd : " />
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.poidsLourd and proprietaireManagedBean.selectedMarchandise.poidsLourd ne null}" value="Oui" style="font-weight:bold"/>
-                        <h:outputText rendered="#{!proprietaireManagedBean.selectedMarchandise.poidsLourd and proprietaireManagedBean.selectedMarchandise.poidsLourd ne null}" value="Non" style="font-weight:bold"/>
-
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idProprietaire ne null}" value="Propriétaire :" />
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idProprietaire ne null}" value="#{proprietaireManagedBean.selectedMarchandise.idProprietaire.prenom} #{marchandiseManagedBean.selectedMarchandise.idProprietaire.nom}" style="font-weight:bold"/>
-
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idPays.nom ne null}" value="Pays d'import : " />
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.idPays.nom ne null}" value="#{proprietaireManagedBean.selectedMarchandise.idPays.nom}" style="font-weight:bold"/>
-
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.dateArriveeCargot ne null}" value="Arrivée au cargot : " />
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.dateArriveeCargot ne null}" value="#{proprietaireManagedBean.selectedMarchandise.dateArriveeCargot}" style="font-weight:bold">
-                            <f:convertDateTime timeZone="#{defaultTimeZone.timeZone}" pattern="dd/MM/yyyy"/>
-                        </h:outputText>
-
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.dateEntreeMagasin ne null}" value="Entrée au magasin : " />
-                        <h:outputText rendered="#{proprietaireManagedBean.selectedMarchandise.dateEntreeMagasin ne null}" value="#{proprietaireManagedBean.selectedMarchandise.dateEntreeMagasin}" style="font-weight:bold">
-                            <f:convertDateTime timeZone="#{defaultTimeZone.timeZone}" pattern="dd/MM/yyyy"/>
-                        </h:outputText>
-
-                    </h:panelGrid>
-                    <p:separator/>
-                </p:outputPanel>
-
-
-                <center>
-                    <p:commandButton id="close"  onclick="updateArticleWidget.hide();" type="reset" value="Ok"/>
-                    <pe:tooltip for="close" value="Fermer ce dialogue" showEffect="fadeIn" hideEffect="fadeIn"/>
-                </center>
-            </h:form>
-        </p:dialog>
-    </ui:define>
+	template="/pages/public/SiTemplate.xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<ui:define name="bodybar">
+		<h:panelGrid columns="1">
+			<h:outputText value="Gestion des Services" />
+		</h:panelGrid>
+	</ui:define>
+
+	<ui:define name="bodybarRight">
+		<p:commandButton id="addButton" value="Nouveau service web"
+			icon="ui-icon-plusthick"
+			action="#{serviceManagedBean.prepareCreate()}"
+			oncomplete="dialogwsCreate.show();" update=":createUserForm" />
+		<pe:tooltip for="addButton"
+			value="Créer un nouveau propriétaire de marchandises"
+			showEffect="fadeIn" hideEffect="fadeIn" />
+	</ui:define>
+
+	<ui:define name="body">
+
+		<h:form id="form">
+			<p:panel id="panellistCollaborateur">
+				<h:panelGrid columns="1" style="text-align: center;width: 100%">
+					<p:selectOneButton value="#{proprietaireManagedBean.etat}">
+						<f:selectItem id="btnTous" itemLabel="Tous les services"
+							itemDescription="Tous les services " itemValue="default" />
+					</p:selectOneButton>
+
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+
+		<br />
+
+		<h:form id="listUtilisateurForm">
+
+			<p:dataTable id="listUtilisateurDataTable"
+				value="#{serviceManagedBean.listServices}"
+				emptyMessage="Aucun propriétaire trouvé !!" paginator="true"
+				rows="20" var="item" paginatorPosition="bottom"
+				styleClass="ui-datatable-center"
+				paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+				rowsPerPageTemplate="5,10,20,50,100,200" rowKey="#{item.idService}">
+
+				<p:ajax id="ajaxToggler" onstart="collapseOpenedRow();"
+					event="rowToggle" />
+				<p:column headerText="" style="text-align: center">
+					<p:rowToggler />
+				</p:column>
+
+				<p:column sortBy="#{item.nomService}" headerText="Nom de Service">
+					<h:outputText value="#{item.nomService}" />
+				</p:column>
+
+
+				<p:column sortBy="#{item.classeService}"
+					headerText="Classe de Service">
+					<h:outputText value="#{item.classeService}" />
+				</p:column>
+
+				<p:column sortBy="#{item.typeService}" headerText="Type de Service">
+					<h:outputText value="#{item.typeService}" />
+				</p:column>
+
+				<p:column headerText="Actions" width="100">
+
+					<p:commandButton id="editButton" icon="ui-icon ui-icon-search"
+						oncomplete="dialogEdit.show()"
+						actionListener="#{serviceManagedBean.prepareEdit(item)}"
+						update=":editUserForm" />
+
+					<p:commandButton id="deleteButton" icon="ui-icon ui-icon-trash"
+						onclick="confirmation.show();">
+						<f:setPropertyActionListener value="#{item}"
+							target="#{serviceManagedBean.selectedService}" />
+					</p:commandButton>
+
+					<p:commandButton id="addButtonAccount" icon="ui-icon-plusthick"
+						action="#{serviceManagedBean.prepareCreateAccount()}"
+						oncomplete="dialogCompteCreate.show();" update=":createCompteForm">
+						<f:setPropertyActionListener value="#{item}"
+							target="#{serviceManagedBean.selectedService}" />
+
+					</p:commandButton>
+
+
+					<pe:tooltip for="editButton" value="Editer le service"
+						showEffect="fadeIn" hideEffect="fadeIn" />
+					<pe:tooltip for="deleteButton" value="Supprimer le service"
+						showEffect="fadeIn" hideEffect="fadeIn" />
+
+				</p:column>
+
+				<p:rowExpansion id="rowd">
+
+
+					<p:dataTable rowKey="#{a.accountId}" styleClass="mystyle"
+						value="#{item.accountList}" var="a" id="listeCompte"
+						emptyMessage="Aucun compte pour ce service !" paginator="true"
+						rows="5" paginatorPosition="bottom" rowsPerPageTemplate="10,20,50"
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+
+						<p:column headerText="Login" rendered="#{item.urlService ne null}">
+							<h:outputText value="#{a.login}" />
+						</p:column>
+
+						<p:column headerText="Password"
+							rendered="#{item.urlService ne null}">
+							<h:outputText value="#{a.password}" />
+						</p:column>
+
+						<p:column headerText="Auth_Token"
+							rendered="#{item.urlService ne null}">
+							<h:outputText value="#{a.authToken}" />
+						</p:column>
+
+						<p:column headerText="Compte_WS_Secret"
+							rendered="#{item.urlService ne null}">
+							<h:outputText value="#{a.compteWsSecret}" />
+						</p:column>
+
+						<p:column headerText="Balance"
+							rendered="#{item.urlService ne null}">
+							<h:outputText value="#{a.balance}" />
+						</p:column>
+
+						<p:column headerText="URL service"
+							rendered="#{item.urlService ne null}">
+							<h:outputText value="#{item.urlService}" />
+						</p:column>
+
+						<p:column headerText="Nom constructeur"
+							rendered="#{item.urlService eq null}">
+							<h:outputText value="#{a.nomConstructeur}" />
+						</p:column>
+
+						<p:column headerText="Version modem"
+							rendered="#{item.urlService eq null}">
+							<h:outputText value="#{a.versionModem}" />
+						</p:column>
+
+						<p:column headerText="Modem Port"
+							rendered="#{item.urlService eq null}">
+							<h:outputText value="#{a.modemPort}" />
+						</p:column>
+
+						<p:column headerText="N° Port"
+							rendered="#{item.urlService eq null}">
+							<h:outputText value="#{a.numPort}" />
+						</p:column>
+
+						<p:column headerText="Vitesse Max du Port"
+							rendered="#{item.urlService eq null}">
+							<h:outputText value="#{a.vitesseMaxPort}" />
+						</p:column>
+
+						<p:column headerText="N° Téléphone">
+							<h:outputText value="#{a.numTel}" />
+						</p:column>
+
+						<p:column headerText="N° Centre du service"
+							rendered="#{item.urlService eq null}">
+							<h:outputText value="#{a.numCentreService}" />
+						</p:column>
+
+						<p:column headerText="Coût SMS"
+							rendered="#{item.coutSmsCalc ne 'non'}">
+							<h:outputText value="#{a.coutSms}" />
+						</p:column>
+
+
+						<p:column headerText="Actions" width="50">
+
+							<p:commandButton id="editButtonc" icon="ui-icon ui-icon-search"
+								oncomplete="dialogAccountEdit.show()"
+								actionListener="#{serviceManagedBean.prepareEditAccount(selectedAccount)}"
+								update=":editAccountForm">
+								<f:setPropertyActionListener value="#{a}"
+									target="#{serviceManagedBean.selectedAccount}" />
+							</p:commandButton>
+
+							<p:commandButton id="deleteButtonc" icon="ui-icon ui-icon-trash"
+								onclick="confirmationCompte.show();">
+								<f:setPropertyActionListener value="#{a}"
+									target="#{serviceManagedBean.selectedAccount}" />
+								<f:setPropertyActionListener value="#{item}"
+									target="#{serviceManagedBean.selectedService}" />
+
+							</p:commandButton>
+
+							<pe:tooltip for="editButtonc" value="Editer le compte"
+								showEffect="fadeIn" hideEffect="fadeIn" />
+							<pe:tooltip for="deleteButtonc" value="Supprimer le compte"
+								showEffect="fadeIn" hideEffect="fadeIn" />
+
+						</p:column>
+
+
+					</p:dataTable>
+				</p:rowExpansion>
+			</p:dataTable>
+
+		</h:form>
+	</ui:define>
+
+
+	<ui:define name="dialogbox">
+
+		<p:confirmDialog id="confirmDialog"
+			message="Êtes vous sûr de bien vouloir supprimer définitivement ce service ?"
+			header="Suppression de ce service" severity="alert"
+			widgetVar="confirmation" appendTo="@(body)">
+			<h:form>
+				<center>
+					<p:commandButton id="confirm" value="Oui"
+						update=":listUtilisateurForm" oncomplete="confirmation.hide()"
+						actionListener="#{serviceManagedBean.destroy()}" />
+					<p:commandButton id="decline" value="Non"
+						onclick="confirmation.hide();" type="button" />
+				</center>
+				<p:tooltip for="confirm"
+					value="Valider l'opération de suppression de ce service"
+					showEffect="fadeIn" hideEffect="fadeIn" />
+				<p:tooltip for="decline"
+					value="Annuler l'opération de suppression de ce service"
+					showEffect="fadeIn" hideEffect="fadeIn" />
+			</h:form>
+		</p:confirmDialog>
+
+
+		<p:confirmDialog id="confirmDialogCompte"
+			message="Êtes vous sûr de bien vouloir supprimer définitivement ce compte ?"
+			header="Suppression de ce service" severity="alert"
+			widgetVar="confirmationCompte" appendTo="@(body)">
+			<h:form id="formDeleteCompte">
+				<center>
+					<p:commandButton id="confirmCompte" immediate="false" value="Oui"
+						update=":listUtilisateurForm:listUtilisateurDataTable"
+						oncomplete="confirmationCompte.hide()"
+						action="#{serviceManagedBean.destroyAccount()}">
+					</p:commandButton>
+					<p:commandButton id="declineCompte" value="Non"
+						onclick="confirmationCompte.hide();" type="button" />
+				</center>
+				<p:tooltip for="confirmCompte"
+					value="Valider l'opération de suppression de ce compte"
+					showEffect="fadeIn" hideEffect="fadeIn" />
+				<p:tooltip for="declineCompte"
+					value="Annuler l'opération de suppression de ce compte"
+					showEffect="fadeIn" hideEffect="fadeIn" />
+			</h:form>
+		</p:confirmDialog>
+
+
+		<p:dialog closeOnEscape="true" id="choixDialogForm"
+			widgetVar="dialogChoixCreate" header="Veuillez choisir un service"
+			appendTo="@(body)" modal="true" resizable="false">
+			<h:form>
+
+				<p:separator />
+				<center>
+					<p:commandButton immediate="false" value="Service Modem"
+						oncomplete="dialogCreate.show();"
+						onclick="dialogChoixCreate.hide();" />
+					<p:commandButton immediate="false" value="Service WS"
+						onclick="dialogChoixCreate.hide();"
+						oncomplete="dialogwsCreate.show();" />
+
+
+				</center>
+
+			</h:form>
+		</p:dialog>
+
+		<p:dialog closeOnEscape="true" id="createDialogForm"
+			widgetVar="dialogCreate" header="Création d'un nouveau service modem"
+			appendTo="@(body)" modal="true" resizable="false">
+			<h:form id="createUserForm">
+				<br />
+				<p:panelGrid id="panelcreate" columns="2">
+
+					<p:outputLabel value="Nom du service : " for="nom" />
+					<p:inputText id="nom" title="Nom du service"
+						value="#{serviceManagedBean.selectedService.nomService}"
+						required="true"
+						requiredMessage="Le champ nom service est obligatoire !" />
+
+					<p:outputLabel value="Type du service : " for="type" />
+					<p:inputText id="type" title="Type du nouveau service"
+						value="#{serviceManagedBean.selectedService.typeService}"
+						required="true"
+						requiredMessage="Le champ type du service est obligatoire !" />
+
+					<p:outputLabel value="Classe du service : " for="classe" />
+					<p:inputText id="classe" title="Classe du nouveau service"
+						value="#{serviceManagedBean.selectedService.classeService}"
+						required="true"
+						requiredMessage="Le champ classe du service est obligatoire !" />
+
+
+
+				</p:panelGrid>
+				<br />
+				<p:separator />
+				<center>
+					<p:commandButton id="valider1" immediate="false" value="Valider"
+						action="#{serviceManagedBean.create()}"
+						update=":listUtilisateurForm:listUtilisateurDataTable :createUserForm" />
+					<p:commandButton id="annuler1" value="Annuler" type="reset"
+						onclick="dialogCreate.hide();" />
+
+					<pe:tooltip for="valider1"
+						value="Valider l'opération de création d'un nouveau service"
+						showEffect="fadeIn" hideEffect="fadeIn" />
+					<pe:tooltip for="annuler1"
+						value="Annuler l'opération de création d'un nouveau service"
+						showEffect="fadeIn" hideEffect="fadeIn" />
+				</center>
+
+			</h:form>
+		</p:dialog>
+
+
+
+
+
+		<!-- Create Account -->
+
+		<p:dialog closeOnEscape="true" id="createDialogCompteForm"
+			widgetVar="dialogCompteCreate" header="Création d'un nouveau compte"
+			appendTo="@(body)" modal="true" resizable="false">
+			<h:form id="createCompteForm">
+				<br />
+				<p:panelGrid id="panelcreateCompte" columns="2">
+
+					<h:outputLabel value="Login :" for="loginaccount"
+						rendered="#{serviceManagedBean.selectedService.urlService ne null}" />
+					<p:inputText id="loginaccount" title="Login"
+						value="#{serviceManagedBean.selectedAccount.login}"
+						rendered="#{serviceManagedBean.selectedService.urlService ne null}"
+						required="true" requiredMessage="Le champ Login est obligatoire !" />
+
+
+					<h:outputLabel value="Password :" for="passwordaccount"
+						rendered="#{serviceManagedBean.selectedService.urlService ne null}" />
+					<p:password id="passwordaccount" title="Password"
+						value="#{serviceManagedBean.selectedAccount.password}"
+						rendered="#{serviceManagedBean.selectedService.urlService ne null}"
+						required="true"
+						requiredMessage="Le champ Password est obligatoire !" />
+
+					<h:outputLabel value="Auth_Token :" for="authtoken"
+						rendered="#{serviceManagedBean.selectedService.urlService ne null}" />
+					<p:inputText id="authtoken" title="Auth_Token"
+						value="#{serviceManagedBean.selectedAccount.authToken}"
+						rendered="#{serviceManagedBean.selectedService.urlService ne null}" />
+
+
+					<h:outputLabel value="Compte WS Secret :" for="wssecret"
+						rendered="#{serviceManagedBean.selectedService.urlService ne null}" />
+					<p:inputText id="wssecret" title="Compte WS Secret"
+						value="#{serviceManagedBean.selectedAccount.compteWsSecret}"
+						rendered="#{serviceManagedBean.selectedService.urlService ne null}" />
+
+					<h:outputLabel value="Balance :" for="balance"
+						rendered="#{serviceManagedBean.selectedService.urlService ne null}" />
+					<p:inputText id="balance" title="Balance"
+						value="#{serviceManagedBean.selectedAccount.balance}"
+						rendered="#{serviceManagedBean.selectedService.urlService ne null}" />
+
+					<h:outputLabel value="Nom constructeur :" for="constructeur"
+						rendered="#{serviceManagedBean.selectedService.urlService eq null}" />
+					<p:inputText id="constructeur" title="Nom Constructeur"
+						value="#{serviceManagedBean.selectedAccount.nomConstructeur}"
+						rendered="#{serviceManagedBean.selectedService.urlService eq null}"
+						required="true"
+						requiredMessage="Le champ Nom constructeur est obligatoire !" />
+
+
+					<h:outputLabel value="Version modem :" for="vmodem"
+						rendered="#{serviceManagedBean.selectedService.urlService eq null}" />
+					<p:inputText id="vmodem" title="Version modem"
+						value="#{serviceManagedBean.selectedAccount.versionModem}"
+						rendered="#{serviceManagedBean.selectedService.urlService eq null}"
+						required="true"
+						requiredMessage="Le champ Version modem est obligatoire !" />
+
+					<h:outputLabel value="Modem Port :" for="mport"
+						rendered="#{serviceManagedBean.selectedService.urlService eq null}" />
+					<p:inputText id="mport" title="Modem Port"
+						value="#{serviceManagedBean.selectedAccount.modemPort}"
+						rendered="#{serviceManagedBean.selectedService.urlService eq null}"
+						required="true"
+						requiredMessage="Le champ Modem port est obligatoire !" />
+
+					<h:outputLabel value="N° ¨Port :" for="nport"
+						rendered="#{serviceManagedBean.selectedService.urlService eq null}" />
+					<p:inputText id="nport" title="N° Port"
+						value="#{serviceManagedBean.selectedAccount.numPort}"
+						rendered="#{serviceManagedBean.selectedService.urlService eq null}"
+						required="true" requiredMessage="Le champ N° port est obligatoire" />
+
+					<h:outputLabel value="Vitesse Max Port :" for="vmaxport"
+						rendered="#{serviceManagedBean.selectedService.urlService eq null}" />
+					<p:inputText id="vmaxport" title="Vitesse Max Port"
+						value="#{serviceManagedBean.selectedAccount.vitesseMaxPort}"
+						rendered="#{serviceManagedBean.selectedService.urlService eq null}"
+						required="true"
+						requiredMessage="Le champ Vitesse Max Port est obligatoire !" />
+
+					<h:outputLabel value="N° Téléphone :" for="ntel" />
+					<p:inputMask id="ntel" title="N° Téléphone" placeHolder=""
+						mask="+99999999999"
+						value="#{serviceManagedBean.selectedAccount.numTel}"
+						required="true"
+						requiredMessage="Le champ N° Téléphone est obligatoire !" />
+
+					<h:outputLabel value="N° Centre du service :" for="ncentre"
+						rendered="#{serviceManagedBean.selectedService.urlService eq null}" />
+					<p:inputText id="ncentre" title="N° Centre du service"
+						value="#{serviceManagedBean.selectedAccount.numCentreService}"
+						rendered="#{serviceManagedBean.selectedService.urlService eq null}" />
+
+
+					<h:outputLabel value="Coût SMS :" for="couts"
+						rendered="#{serviceManagedBean.selectedService.coutSmsCalc ne 'non'}" />
+					<p:inputText id="couts" title="Coût SMS"
+						value="#{serviceManagedBean.selectedAccount.coutSms}"
+						rendered="#{serviceManagedBean.selectedService.coutSmsCalc ne 'non'}" />
+
+
+
+				</p:panelGrid>
+				<br />
+				<p:separator />
+				<center>
+					<p:commandButton id="valider9" value="Valider"
+						action="#{serviceManagedBean.createAccount}"
+						update=":listUtilisateurForm:listUtilisateurDataTable :createCompteForm">
+						<f:setPropertyActionListener
+							target="#{serviceManagedBean.selectedAccount.idService}"
+							value="#{serviceManagedBean.selectedService}" />
+
+					</p:commandButton>
+
+					<p:commandButton id="annuler9" value="Annuler" type="reset"
+						onclick="dialogCompteCreate.hide();" />
+
+					<pe:tooltip for="valider9"
+						value="Valider l'opération de création d'un nouveau service"
+						showEffect="fadeIn" hideEffect="fadeIn" />
+					<pe:tooltip for="annuler9"
+						value="Annuler l'opération de création d'un nouveau service"
+						showEffect="fadeIn" hideEffect="fadeIn" />
+				</center>
+
+			</h:form>
+		</p:dialog>
+
+		<!-- ws -->
+
+		<p:dialog closeOnEscape="true" id="createDialogwsForm"
+			widgetVar="dialogwsCreate" header="Création d'un nouveau service web"
+			appendTo="@(body)" modal="true" resizable="false">
+			<h:form id="createUserForms">
+				<br />
+				<p:panelGrid id="panelcreates" columns="2">
+
+					<p:outputLabel value="Nom du service : " for="noms" />
+					<p:inputText id="noms" title="Nom du service"
+						value="#{serviceManagedBean.selectedService.nomService}"
+						required="true"
+						requiredMessage="Le champ nom service est obligatoire !" />
+
+					<p:outputLabel value="Type du service : " for="types" />
+					<p:selectOneMenu style="width: 160px;" id="types"
+						value="#{serviceManagedBean.selectedService.typeService}"
+						required="true"
+						requiredMessage="Le champ type du service est obligatoire !">
+						<f:selectItem itemLabel="Sélectionnez une" itemValue="" />
+						<f:selectItem itemLabel="ServiceWeb" itemValue="ServiceWeb" />
+						<f:selectItem itemLabel="ServiceModem" itemValue="ServiceModem" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="URL du service : " for="urls" />
+					<p:inputText id="urls" title="Type du nouveau service"
+						value="#{serviceManagedBean.selectedService.urlService}"
+						required="true"
+						requiredMessage="Le champ type du service est obligatoire !" />
+
+					<p:outputLabel value="Classe du service : " for="classes" />
+					<p:inputText id="classes" title="Type du nouveau service"
+						value="#{serviceManagedBean.selectedService.classeService}"
+						required="true"
+						requiredMessage="Le champ classe du service est obligatoire !" />
+
+					<p:outputLabel value="Coût saisie : " for="cout" />
+					<p:selectOneMenu id="cout" style="width: 160px;"
+						value="#{serviceManagedBean.selectedService.coutSmsCalc}">
+						<f:selectItem itemLabel="Sélectionnez une" itemValue="#{null}" />
+						<f:selectItem itemLabel="oui" itemValue="oui" />
+						<f:selectItem itemLabel="non" itemValue="non" />
+					</p:selectOneMenu>
+
+
+				</p:panelGrid>
+				<br />
+				<p:separator />
+				<center>
+					<p:commandButton id="valider2" immediate="false" value="Valider"
+						action="#{serviceManagedBean.create()}"
+						update=":listUtilisateurForm:listUtilisateurDataTable :createUserForms" />
+					<p:commandButton id="annuler2" value="Annuler" type="reset"
+						onclick="dialogwsCreate.hide();" />
+
+					<pe:tooltip for="valider2"
+						value="Valider l'opération de création d'un nouveau service"
+						showEffect="fadeIn" hideEffect="fadeIn" />
+					<pe:tooltip for="annuler2"
+						value="Annuler l'opération de création d'un nouveau service"
+						showEffect="fadeIn" hideEffect="fadeIn" />
+				</center>
+
+			</h:form>
+		</p:dialog>
+
+		<!-- edit compte -->
+
+		<p:dialog closeOnEscape="true" id="editAccountDialogForm"
+			widgetVar="dialogAccountEdit" header="Mise à jour du compte"
+			appendTo="@(body)" modal="true" resizable="false">
+			<h:form id="editAccountForm">
+				<p:panelGrid id="panelAccountEdit" columns="2">
+
+					<p:outputLabel value="Login : "
+						rendered="#{serviceManagedBean.selectedAccount.login ne null}" />
+					<p:inputText title="Login du nouveau compte"
+						value="#{serviceManagedBean.selectedAccount.login}"
+						rendered="#{serviceManagedBean.selectedAccount.login ne null}"
+						required="true" requiredMessage="Le champ login est obligatoire !" />
+
+					<p:outputLabel value="Password : "
+						rendered="#{serviceManagedBean.selectedAccount.login ne null}" />
+					<p:inputText title="Password du nouveau compte"
+						value="#{serviceManagedBean.selectedAccount.password}"
+						rendered="#{serviceManagedBean.selectedAccount.login ne null}"
+						required="true"
+						requiredMessage="Le champ password est obligatoire !" />
+
+					<p:outputLabel value="Auth_Token : "
+						rendered="#{serviceManagedBean.selectedAccount.login ne null}" />
+					<p:inputText title="Auth_Token du nouveau compte"
+						value="#{serviceManagedBean.selectedAccount.authToken}"
+						rendered="#{serviceManagedBean.selectedAccount.login ne null}" />
+
+					<p:outputLabel value="Compte WS Secret : "
+						rendered="#{serviceManagedBean.selectedAccount.login ne null}" />
+					<p:inputText title="WS Secret du nouveau compte"
+						value="#{serviceManagedBean.selectedAccount.compteWsSecret}"
+						rendered="#{serviceManagedBean.selectedAccount.login ne null}" />
+
+					<p:outputLabel value="Balance : "
+						rendered="#{serviceManagedBean.selectedAccount.login ne null}" />
+					<p:inputText title="Balance du nouveau compte"
+						value="#{serviceManagedBean.selectedAccount.balance}"
+						rendered="#{serviceManagedBean.selectedAccount.login ne null}" />
+
+					<p:outputLabel value="Nom constructeur : "
+						rendered="#{serviceManagedBean.selectedAccount.login eq null}" />
+					<p:inputText title="Nom constructeur"
+						value="#{serviceManagedBean.selectedAccount.nomConstructeur}"
+						rendered="#{serviceManagedBean.selectedAccount.login eq null}"
+						required="true"
+						requiredMessage="Le champ Nom constructeur est obligatoire !" />
+
+
+					<p:outputLabel value="Version modem : "
+						rendered="#{serviceManagedBean.selectedAccount.login eq null}" />
+					<p:inputText title="version modem"
+						value="#{serviceManagedBean.selectedAccount.versionModem}"
+						rendered="#{serviceManagedBean.selectedAccount.login eq null}"
+						required="true"
+						requiredMessage="Le champ Version modem est obligatoire !" />
+
+
+					<p:outputLabel value="Modem Port : "
+						rendered="#{serviceManagedBean.selectedAccount.login eq null}" />
+					<p:inputText title="Modem Port"
+						value="#{serviceManagedBean.selectedAccount.modemPort}"
+						rendered="#{serviceManagedBean.selectedAccount.login eq null}"
+						required="true"
+						requiredMessage="Le champ Modem Port est obligatoire !" />
+
+					<p:outputLabel value="N° Port : "
+						rendered="#{serviceManagedBean.selectedAccount.login eq null}" />
+					<p:inputText title="N° Port"
+						value="#{serviceManagedBean.selectedAccount.numPort}"
+						rendered="#{serviceManagedBean.selectedAccount.login eq null}"
+						required="true"
+						requiredMessage="Le champ N° Port est obligatoire !" />
+
+					<p:outputLabel value="Vitesse Max du port : "
+						rendered="#{serviceManagedBean.selectedAccount.login eq null}" />
+					<p:inputText title="Vitesse Max Port"
+						value="#{serviceManagedBean.selectedAccount.vitesseMaxPort}"
+						rendered="#{serviceManagedBean.selectedAccount.login eq null}"
+						required="true"
+						requiredMessage="Le champ Vitesse Max du Port est obligatoire !" />
+
+
+					<p:outputLabel value="N° Téléphone : " />
+					<p:inputText title="N° Téléphone"
+						value="#{serviceManagedBean.selectedAccount.numTel}" />
+
+					<p:outputLabel value="N° Centre du service : "
+						rendered="#{serviceManagedBean.selectedAccount.login eq null}" />
+					<p:inputText title="N° Centre du service"
+						value="#{serviceManagedBean.selectedAccount.numCentreService}"
+						rendered="#{serviceManagedBean.selectedAccount.login eq null}" />
+
+
+
+				</p:panelGrid>
+
+				<br />
+				<p:separator />
+				<center>
+					<p:commandButton id="valider7" immediate="false" value="Valider"
+						onclick="dialogAccountEdit.hide();"
+						action="#{serviceManagedBean.updateAccount()}"
+						update=":listUtilisateurForm">
+					</p:commandButton>
+					<p:commandButton id="annuler7" value="Annuler" type="reset"
+						onclick="dialogAccountEdit.hide();" />
+
+					<pe:tooltip for="valider7"
+						value="Valider l'opération de modification de ce propriétaire"
+						showEffect="fadeIn" hideEffect="fadeIn" />
+					<pe:tooltip for="annuler7"
+						value="Annuler l'opération de modification de ce propriétaire"
+						showEffect="fadeIn" hideEffect="fadeIn" />
+				</center>
+
+			</h:form>
+		</p:dialog>
+
+
+
+
+
+
+
+		<p:dialog closeOnEscape="true" id="editDialogForm"
+			widgetVar="dialogEdit" header="Mise à jour du propriétaire"
+			appendTo="@(body)" modal="true" resizable="false">
+			<h:form id="editUserForm">
+				<p:panelGrid id="panelEdit" columns="2">
+
+					<p:outputLabel value="Nom de service : " />
+					<p:inputText title="Nom du nouveau service"
+						value="#{serviceManagedBean.selectedService.nomService}"
+						required="true"
+						requiredMessage="Le champ prénom est obligatoire !" />
+
+					<p:outputLabel value="Type de service : " />
+					<p:inputText title="Type du nouveau service"
+						value="#{serviceManagedBean.selectedService.typeService}"
+						required="true" requiredMessage="Le champ nom est obligatoire !" />
+
+					<p:outputLabel value="Classe de service : " />
+					<p:inputText title="Classe du nouveau service"
+						value="#{serviceManagedBean.selectedService.classeService}"
+						required="true" requiredMessage="Le champ nom est obligatoire !" />
+
+
+				</p:panelGrid>
+
+				<br />
+				<p:separator />
+				<center>
+					<p:commandButton id="valider" immediate="false" value="Valider"
+						action="#{serviceManagedBean.update()}"
+						update=":listUtilisateurForm :editUserForm" />
+					<p:commandButton id="annuler" value="Annuler" type="reset"
+						onclick="dialogEdit.hide();" />
+
+					<pe:tooltip for="valider"
+						value="Valider l'opération de modification de ce propriétaire"
+						showEffect="fadeIn" hideEffect="fadeIn" />
+					<pe:tooltip for="annuler"
+						value="Annuler l'opération de modification de ce propriétaire"
+						showEffect="fadeIn" hideEffect="fadeIn" />
+				</center>
+
+			</h:form>
+		</p:dialog>
+
+
+
+
+		<p:dialog id="detailsVehiculeDialog" header="Détails de véhicule"
+			widgetVar="updateVehiculeWidget" showEffect="fade"
+			hideEffect="explode" modal="true" resizable="false">
+			<h:form id="DetailsVehiculeForm">
+
+				<p:outputPanel id="DetailsVehicule">
+
+					<h:panelGrid id="display" columns="2" cellpadding="3"
+						style="margin:0 auto;">
+						<p:graphicImage style="padding-right: 15px;" width="50"
+							value="#{marqueManagedBean.findLogoMarque(proprietaireManagedBean.selectedMarchandise.idModele.idMarque)}" />
+						<h:panelGrid id="diay" columns="2" cellpadding="3"
+							style="margin:0 auto;">
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.idModele.libelle ne null}"
+								value="Modèle : " />
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.idModele.libelle ne null}"
+								value="#{proprietaireManagedBean.selectedMarchandise.idModele.libelle}"
+								style="font-weight:bold" />
+
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.idCarburant.libelle ne null}"
+								value="Carburant :" />
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.idCarburant.libelle ne null}"
+								value="#{proprietaireManagedBean.selectedMarchandise.idCarburant.libelle}"
+								style="font-weight:bold" />
+
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.matricule ne null}"
+								value="Matricule : " />
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.matricule ne null}"
+								value="#{proprietaireManagedBean.selectedMarchandise.matricule}"
+								style="font-weight:bold" />
+
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.idCouleur.libelle ne null}"
+								value="Couleur : " />
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.idCouleur.libelle ne null}"
+								value="#{proprietaireManagedBean.selectedMarchandise.idCouleur.libelle}"
+								style="font-weight:bold" />
+
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.numChassis ne null}"
+								value="Chassis : " />
+							<h:outputText
+								rendered="#{marchandiseManagedBean.selectedMarchandise.numChassis ne null}"
+								value="#{proprietaireManagedBean.selectedMarchandise.numChassis}"
+								style="font-weight:bold" />
+
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.puissance ne null}"
+								value="Puissance : " />
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.puissance ne null}"
+								value="#{proprietaireManagedBean.selectedMarchandise.puissance} CV"
+								style="font-weight:bold" />
+
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.description ne null}"
+								value="Description : " />
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.description ne null}"
+								value="#{proprietaireManagedBean.selectedMarchandise.description}"
+								style="font-weight:bold" />
+						</h:panelGrid>
+					</h:panelGrid>
+					<p:separator />
+					<h:panelGrid id="disp" columns="2" cellpadding="3"
+						style="margin:0 auto;">
+
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.idDepartement.libelle ne null}"
+							value="Département : " />
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.idDepartement.libelle ne null}"
+							value="#{proprietaireManagedBean.selectedMarchandise.idRegime.idDepartement.libelle}"
+							style="font-weight:bold" />
+
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.idTypeRegime.libelle ne null}"
+							value="Type du régime :" />
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.idTypeRegime.libelle ne null}"
+							value="#{proprietaireManagedBean.selectedMarchandise.idRegime.idTypeRegime.libelle}"
+							style="font-weight:bold" />
+
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.libelle ne null}"
+							value="Régime : " />
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.libelle ne null}"
+							value="#{proprietaireManagedBean.selectedMarchandise.idRegime.libelle}"
+							style="font-weight:bold" />
+
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.identifiant ne null}"
+							value="Identifiant : " />
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.identifiant ne null}"
+							value="#{proprietaireManagedBean.selectedMarchandise.identifiant}"
+							style="font-weight:bold" />
+
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idPlaceMagasin ne null}"
+							value="Place : " />
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idPlaceMagasin ne null}"
+							value="#{proprietaireManagedBean.selectedMarchandise.idPlaceMagasin.numPlace}"
+							style="font-weight:bold" />
+
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.poidsLourd ne null}"
+							value="Engin lourd : " />
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.poidsLourd and proprietaireManagedBean.selectedMarchandise.poidsLourd ne null}"
+							value="Oui" style="font-weight:bold" />
+						<h:outputText
+							rendered="#{!proprietaireManagedBean.selectedMarchandise.poidsLourd and proprietaireManagedBean.selectedMarchandise.poidsLourd ne null}"
+							value="Non" style="font-weight:bold" />
+
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idProprietaire ne null}"
+							value="Propriétaire :" />
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idProprietaire ne null}"
+							value="#{proprietaireManagedBean.selectedMarchandise.idProprietaire.prenom} #{marchandiseManagedBean.selectedMarchandise.idProprietaire.nom}"
+							style="font-weight:bold" />
+
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idPays.nom ne null}"
+							value="Pays d'import : " />
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idPays.nom ne null}"
+							value="#{proprietaireManagedBean.selectedMarchandise.idPays.nom}"
+							style="font-weight:bold" />
+
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.dateArriveeCargot ne null}"
+							value="Arrivée au cargot : " />
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.dateArriveeCargot ne null}"
+							value="#{proprietaireManagedBean.selectedMarchandise.dateArriveeCargot}"
+							style="font-weight:bold">
+							<f:convertDateTime timeZone="#{defaultTimeZone.timeZone}"
+								pattern="dd/MM/yyyy" />
+						</h:outputText>
+
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.dateEntreeMagasin ne null}"
+							value="Entrée au magasin : " />
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.dateEntreeMagasin ne null}"
+							value="#{proprietaireManagedBean.selectedMarchandise.dateEntreeMagasin}"
+							style="font-weight:bold">
+							<f:convertDateTime timeZone="#{defaultTimeZone.timeZone}"
+								pattern="dd/MM/yyyy" />
+						</h:outputText>
+
+					</h:panelGrid>
+					<p:separator />
+				</p:outputPanel>
+
+				<center>
+					<p:commandButton id="declinee"
+						onclick="updateVehiculeWidget.hide();" type="reset" value="Ok" />
+					<p:tooltip for="declinee" value="Fermer ce dialogue"
+						showEffect="fade" hideEffect="fade" />
+				</center>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog id="detailsArticleDialog" header="Détails de l'article"
+			widgetVar="updateArticleWidget" showEffect="fade"
+			hideEffect="explode" modal="true" resizable="false">
+			<h:form id="DetailsArticleForm">
+				<p:outputPanel id="Detailsarticle">
+
+					<h:panelGrid id="display" columns="2" cellpadding="3"
+						style="margin:0 auto;">
+						<p:graphicImage style="padding-right: 15px;" width="50"
+							value="#{marqueManagedBean.findLogoMarque(proprietaireManagedBean.selectedMarchandise.idModele.idMarque)}" />
+						<h:panelGrid id="diay" columns="2" cellpadding="3"
+							style="margin:0 auto;">
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.idModele.libelle ne null}"
+								value="Modèle : " />
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.idModele.libelle ne null}"
+								value="#{proprietaireManagedBean.selectedMarchandise.idModele.libelle}"
+								style="font-weight:bold" />
+
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.idCarburant.libelle ne null}"
+								value="Carburant :" />
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.idCarburant.libelle ne null}"
+								value="#{proprietaireManagedBean.selectedMarchandise.idCarburant.libelle}"
+								style="font-weight:bold" />
+
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.matricule ne null}"
+								value="Matricule : " />
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.matricule ne null}"
+								value="#{proprietaireManagedBean.selectedMarchandise.matricule}"
+								style="font-weight:bold" />
+
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.idCouleur.libelle ne null}"
+								value="Couleur : " />
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.idCouleur.libelle ne null}"
+								value="#{proprietaireManagedBean.selectedMarchandise.idCouleur.libelle}"
+								style="font-weight:bold" />
+
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.numChassis ne null}"
+								value="Chassis : " />
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.numChassis ne null}"
+								value="#{proprietaireManagedBean.selectedMarchandise.numChassis}"
+								style="font-weight:bold" />
+
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.puissance ne null}"
+								value="Puissance : " />
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.puissance ne null}"
+								value="#{proprietaireManagedBean.selectedMarchandise.puissance} CV"
+								style="font-weight:bold" />
+
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.description ne null}"
+								value="Description : " />
+							<h:outputText
+								rendered="#{proprietaireManagedBean.selectedMarchandise.description ne null}"
+								value="#{proprietaireManagedBean.selectedMarchandise.description}"
+								style="font-weight:bold" />
+						</h:panelGrid>
+					</h:panelGrid>
+					<p:separator />
+					<h:panelGrid id="disp" columns="2" cellpadding="3"
+						style="margin:0 auto;">
+
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.idDepartement.libelle ne null}"
+							value="Département : " />
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.idDepartement.libelle ne null}"
+							value="#{proprietaireManagedBean.selectedMarchandise.idRegime.idDepartement.libelle}"
+							style="font-weight:bold" />
+
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.idTypeRegime.libelle ne null}"
+							value="Type du régime :" />
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.idTypeRegime.libelle ne null}"
+							value="#{proprietaireManagedBean.selectedMarchandise.idRegime.idTypeRegime.libelle}"
+							style="font-weight:bold" />
+
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.libelle ne null}"
+							value="Régime : " />
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idRegime.libelle ne null}"
+							value="#{proprietaireManagedBean.selectedMarchandise.idRegime.libelle}"
+							style="font-weight:bold" />
+
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.identifiant ne null}"
+							value="Identifiant : " />
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.identifiant ne null}"
+							value="#{proprietaireManagedBean.selectedMarchandise.identifiant}"
+							style="font-weight:bold" />
+
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idPlaceMagasin ne null}"
+							value="Place : " />
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idPlaceMagasin ne null}"
+							value="#{proprietaireManagedBean.selectedMarchandise.idPlaceMagasin.numPlace}"
+							style="font-weight:bold" />
+
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.poidsLourd ne null}"
+							value="Engin lourd : " />
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.poidsLourd and proprietaireManagedBean.selectedMarchandise.poidsLourd ne null}"
+							value="Oui" style="font-weight:bold" />
+						<h:outputText
+							rendered="#{!proprietaireManagedBean.selectedMarchandise.poidsLourd and proprietaireManagedBean.selectedMarchandise.poidsLourd ne null}"
+							value="Non" style="font-weight:bold" />
+
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idProprietaire ne null}"
+							value="Propriétaire :" />
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idProprietaire ne null}"
+							value="#{proprietaireManagedBean.selectedMarchandise.idProprietaire.prenom} #{marchandiseManagedBean.selectedMarchandise.idProprietaire.nom}"
+							style="font-weight:bold" />
+
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idPays.nom ne null}"
+							value="Pays d'import : " />
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.idPays.nom ne null}"
+							value="#{proprietaireManagedBean.selectedMarchandise.idPays.nom}"
+							style="font-weight:bold" />
+
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.dateArriveeCargot ne null}"
+							value="Arrivée au cargot : " />
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.dateArriveeCargot ne null}"
+							value="#{proprietaireManagedBean.selectedMarchandise.dateArriveeCargot}"
+							style="font-weight:bold">
+							<f:convertDateTime timeZone="#{defaultTimeZone.timeZone}"
+								pattern="dd/MM/yyyy" />
+						</h:outputText>
+
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.dateEntreeMagasin ne null}"
+							value="Entrée au magasin : " />
+						<h:outputText
+							rendered="#{proprietaireManagedBean.selectedMarchandise.dateEntreeMagasin ne null}"
+							value="#{proprietaireManagedBean.selectedMarchandise.dateEntreeMagasin}"
+							style="font-weight:bold">
+							<f:convertDateTime timeZone="#{defaultTimeZone.timeZone}"
+								pattern="dd/MM/yyyy" />
+						</h:outputText>
+
+					</h:panelGrid>
+					<p:separator />
+				</p:outputPanel>
+
+
+				<center>
+					<p:commandButton id="close" onclick="updateArticleWidget.hide();"
+						type="reset" value="Ok" />
+					<pe:tooltip for="close" value="Fermer ce dialogue"
+						showEffect="fadeIn" hideEffect="fadeIn" />
+				</center>
+			</h:form>
+		</p:dialog>
+	</ui:define>
 </ui:composition>

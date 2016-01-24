@@ -1,140 +1,182 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-                template="/pages/public/SiTemplate.xhtml"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:pe="http://primefaces.org/ui/extensions"> 
+	template="/pages/public/SiTemplate.xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
 
-    <ui:define name="title">
+	<ui:define name="title">
 
-        <h:outputText value="Gps"></h:outputText>
+		<h:outputText value="Gps"></h:outputText>
 
-    </ui:define>
+	</ui:define>
 
-    <ui:define name="bodybar">
+	<ui:define name="bodybar">
 
-        <h:panelGrid columns="1" dir="#{login.dir}">
-            <h:outputText value="Entretiens"/>
-        </h:panelGrid>
+		<h:panelGrid columns="1" dir="#{login.dir}">
+			<h:outputText value="Entretiens" />
+		</h:panelGrid>
 
-    </ui:define>
+	</ui:define>
 
-    <ui:define name="bodybarRight">
+	<ui:define name="bodybarRight">
 
-        <p:commandButton icon="ui-icon-plusthick" id="btnNouvEntretien" action="#{entretienManagedBean.prepareCreate()}"
-                         value="Programmer un nouveau entretien" update=":createEntretienForm" oncomplete="createEntretienWidget.show();">
-        </p:commandButton>
+		<p:commandButton icon="ui-icon-plusthick" id="btnNouvEntretien"
+			action="#{entretienManagedBean.prepareCreate()}"
+			value="Programmer un nouveau entretien" update=":createEntretienForm"
+			oncomplete="createEntretienWidget.show();">
+		</p:commandButton>
 
-        <p:tooltip for="btnNouvEntretien" value="Programmer un nouveau entretien" showEffect="fade" hideEffect="fade"/>
+		<p:tooltip for="btnNouvEntretien"
+			value="Programmer un nouveau entretien" showEffect="fade"
+			hideEffect="fade" />
 
-    </ui:define>
+	</ui:define>
 
-    <ui:define name="body">
+	<ui:define name="body">
 
-        <h:form id="formEntretien">
+		<h:form id="formEntretien">
 
-            <p:spacer height="10"/>
-            <p:panel>
-                <p:dataTable id="listEntretien" styleClass="ui-datatable-center" value="#{entretienManagedBean.listEntretien}" var="item" 
-                             paginator="true" rows="10" paginatorPosition="bottom"
-                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" 
-                             emptyMessage="Aucun entretien trouvé !!!">
+			<p:spacer height="10" />
+			<p:panel>
+				<p:dataTable id="listEntretien" styleClass="ui-datatable-center"
+					value="#{entretienManagedBean.listEntretien}" var="item"
+					paginator="true" rows="10" paginatorPosition="bottom"
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+					emptyMessage="Aucun entretien trouvé !!!">
 
-                    <p:column headerText="Véhicule" sortBy="#{item.idVehicule.matricule}">
-                        <h:outputText value="#{item.idVehicule.matricule}"/>
-                    </p:column>
-                    
-                    <p:column headerText="Kilométrage">
-                        <h:outputText value="#{item.kilometrage}"></h:outputText>
-                    </p:column>
-                    
-                    <p:column headerText="Date d'entretien" sortBy="#{item.dateEntretien}">
-                        <h:outputText value="#{item.dateEntretien}">
-                            <f:convertDateTime timeZone="#{defaultTimeZone.timeZone}" locale="fr" pattern="dd/MM/yyyy"/>
-                        </h:outputText>
-                    </p:column>
-                    
-                    <p:column headerText="Description">
-                        <h:outputText value="#{item.description}"></h:outputText>
-                    </p:column>
-                    
-                    <p:column headerText="Effectué?" sortBy="#{item.effectue}">
-                        <h:outputText style="color: green" value="Oui"  rendered="#{item.effectue eq true}"></h:outputText>
-                        <h:outputText style="color: red" value="Non" rendered="#{item.effectue eq false}"></h:outputText>
-                    </p:column>
-                                                         
+					<p:column headerText="Véhicule"
+						sortBy="#{item.idVehicule.matricule}">
+						<h:outputText value="#{item.idVehicule.matricule}" />
+					</p:column>
 
-                    <p:column headerText="Actions" width="50">
+					<p:column headerText="Kilométrage">
+						<h:outputText value="#{item.kilometrage}"></h:outputText>
+					</p:column>
 
-                        <p:commandButton icon="ui-icon ui-icon-search" update=":createEntretienForm" id="btnDetails" oncomplete="createEntretienWidget.show();"> 
-                            <f:setPropertyActionListener value="#{item}" target="#{entretienManagedBean.selectedEntretien}"/>
-                        </p:commandButton>
+					<p:column headerText="Date d'entretien"
+						sortBy="#{item.dateEntretien}">
+						<h:outputText value="#{item.dateEntretien}">
+							<f:convertDateTime timeZone="#{defaultTimeZone.timeZone}"
+								locale="fr" pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
 
-                        <p:commandButton icon="ui-icon ui-icon-trash" id="btnSupp" oncomplete="confirmation.show();">     
-                            <f:setPropertyActionListener value="#{item}" target="#{entretienManagedBean.selectedEntretien}"/>
-                        </p:commandButton>
+					<p:column headerText="Description">
+						<h:outputText value="#{item.description}"></h:outputText>
+					</p:column>
 
-                        <p:tooltip for="btnDetails" value="Modifier l'entretien" showEffect="fade" hideEffect="fade"/>
-                        <p:tooltip for="btnSupp" value="Supprimer l'entretien" showEffect="fade" hideEffect="fade"/>
-                    </p:column>
+					<p:column headerText="Effectué?" sortBy="#{item.effectue}">
+						<h:outputText style="color: green" value="Oui"
+							rendered="#{item.effectue eq true}"></h:outputText>
+						<h:outputText style="color: red" value="Non"
+							rendered="#{item.effectue eq false}"></h:outputText>
+					</p:column>
 
-                </p:dataTable>
-            </p:panel>
-        </h:form>
-    </ui:define>
 
-    <ui:define  name="dialogbox">
+					<p:column headerText="Actions" width="50">
 
-        <p:confirmDialog id="confirmations" message="Êtes vous sûr de bien vouloir procéder à la suppression de cet entretien ?"  
-                         header="Suppression de l'entretien" severity="alert" widgetVar="confirmation" appendToBody="true">  
-            <h:form>
+						<p:commandButton icon="ui-icon ui-icon-search"
+							update=":createEntretienForm" id="btnDetails"
+							oncomplete="createEntretienWidget.show();">
+							<f:setPropertyActionListener value="#{item}"
+								target="#{entretienManagedBean.selectedEntretien}" />
+						</p:commandButton>
 
-                <p:commandButton id="confirm" value="Oui" update=":formEntretien:listEntretien" oncomplete="confirmation.hide()"  
-                                 actionListener="#{entretienManagedBean.destroy()}" ajax="false"/>
+						<p:commandButton icon="ui-icon ui-icon-trash" id="btnSupp"
+							oncomplete="confirmation.show();">
+							<f:setPropertyActionListener value="#{item}"
+								target="#{entretienManagedBean.selectedEntretien}" />
+						</p:commandButton>
 
-                <p:commandButton id="decline" value="Non" onclick="confirmation.hide();" type="button"/>
+						<p:tooltip for="btnDetails" value="Modifier l'entretien"
+							showEffect="fade" hideEffect="fade" />
+						<p:tooltip for="btnSupp" value="Supprimer l'entretien"
+							showEffect="fade" hideEffect="fade" />
+					</p:column>
 
-                <p:tooltip for="confirm" value="Valider" showEffect="fade" hideEffect="fade"/>
-                <p:tooltip for="decline" value="Annuler" showEffect="fade" hideEffect="fade"/>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+	</ui:define>
 
-            </h:form>
-        </p:confirmDialog>
+	<ui:define name="dialogbox">
 
-        <p:dialog closeOnEscape="true" resizable="false" id="createEntretien" appendToBody="true" closable="true" header="Véhicule" widgetVar="createEntretienWidget" modal="true">
-            <h:form id="createEntretienForm">
+		<p:confirmDialog id="confirmations"
+			message="Êtes vous sûr de bien vouloir procéder à la suppression de cet entretien ?"
+			header="Suppression de l'entretien" severity="alert"
+			widgetVar="confirmation" appendToBody="true">
+			<h:form>
 
-                <p:panelGrid id="panelCreate" columns="2">
+				<p:commandButton id="confirm" value="Oui"
+					update=":formEntretien:listEntretien"
+					oncomplete="confirmation.hide()"
+					actionListener="#{entretienManagedBean.destroy()}" ajax="false" />
 
-                    <p:outputLabel value="Véhicule : " for="vehicule"/>
-                    <p:selectOneMenu id="vehicule" value="#{entretienManagedBean.selectedEntretien.idVehicule}" effect="fade" converter="#{vehiculeConverter}">  
+				<p:commandButton id="decline" value="Non"
+					onclick="confirmation.hide();" type="button" />
 
-                        <f:selectItems value="#{vehiculesManagedBean.listVehicule}" var="vehicule" itemLabel="#{vehicule.matricule}" itemValue="#{vehicule}"/>  
-                    </p:selectOneMenu> 
-                    
-                    <p:outputLabel value="Kilométrage : " for="kilometrage"/>
-                    <p:inputText id="kilometrage"  value="#{entretienManagedBean.selectedEntretien.kilometrage}" title="Kilométrage"/>
+				<p:tooltip for="confirm" value="Valider" showEffect="fade"
+					hideEffect="fade" />
+				<p:tooltip for="decline" value="Annuler" showEffect="fade"
+					hideEffect="fade" />
 
-                    <p:outputLabel value="Date de l'entretien : " for="de"/>
-                    <p:calendar id="de"   locale="fr"  value="#{entretienManagedBean.selectedEntretien.dateEntretien}" pattern="dd/MM/yyyy">
-                    </p:calendar>
-                    
-                    <p:outputLabel value="Description : " for="kilometrage"/>
-                    <p:inputTextarea id="description"  value="#{entretienManagedBean.selectedEntretien.description}" title="Description"/>
+			</h:form>
+		</p:confirmDialog>
 
-                    <p:outputLabel value="Effuectué? : " for="effectue"/>
-                    <p:selectBooleanCheckbox id="effectue"  value="#{entretienManagedBean.selectedEntretien.effectue}" />
+		<p:dialog closeOnEscape="true" resizable="false" id="createEntretien"
+			appendToBody="true" closable="true" header="Véhicule"
+			widgetVar="createEntretienWidget" modal="true">
+			<h:form id="createEntretienForm">
 
-                </p:panelGrid>
-                <center>
-                    <p:commandButton id="btnValider" immediate="false" value="Valider" actionListener="#{entretienManagedBean.save()}" update=":formEntretien:listEntretien"/>
-                    <p:commandButton id="btnAnnuler" value="Annuler" type="reset" onclick="createEntretienWidget.hide();"/>
+				<p:panelGrid id="panelCreate" columns="2">
 
-                    <p:tooltip for="btnValider" value="Valider" showEffect="fade" hideEffect="fade"/>
-                    <p:tooltip for="btnAnnuler" value="Annuler" showEffect="fade" hideEffect="fade"/>
-                </center>
-            </h:form>
-        </p:dialog>
-    </ui:define>
+					<p:outputLabel value="Véhicule : " for="vehicule" />
+					<p:selectOneMenu id="vehicule"
+						value="#{entretienManagedBean.selectedEntretien.idVehicule}"
+						effect="fade" converter="#{vehiculeConverter}">
+
+						<f:selectItems value="#{vehiculesManagedBean.listVehicule}"
+							var="vehicule" itemLabel="#{vehicule.matricule}"
+							itemValue="#{vehicule}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Kilométrage : " for="kilometrage" />
+					<p:inputText id="kilometrage"
+						value="#{entretienManagedBean.selectedEntretien.kilometrage}"
+						title="Kilométrage" />
+
+					<p:outputLabel value="Date de l'entretien : " for="de" />
+					<p:calendar id="de" locale="fr"
+						value="#{entretienManagedBean.selectedEntretien.dateEntretien}"
+						pattern="dd/MM/yyyy">
+					</p:calendar>
+
+					<p:outputLabel value="Description : " for="kilometrage" />
+					<p:inputTextarea id="description"
+						value="#{entretienManagedBean.selectedEntretien.description}"
+						title="Description" />
+
+					<p:outputLabel value="Effuectué? : " for="effectue" />
+					<p:selectBooleanCheckbox id="effectue"
+						value="#{entretienManagedBean.selectedEntretien.effectue}" />
+
+				</p:panelGrid>
+				<center>
+					<p:commandButton id="btnValider" immediate="false" value="Valider"
+						actionListener="#{entretienManagedBean.save()}"
+						update=":formEntretien:listEntretien" />
+					<p:commandButton id="btnAnnuler" value="Annuler" type="reset"
+						onclick="createEntretienWidget.hide();" />
+
+					<p:tooltip for="btnValider" value="Valider" showEffect="fade"
+						hideEffect="fade" />
+					<p:tooltip for="btnAnnuler" value="Annuler" showEffect="fade"
+						hideEffect="fade" />
+				</center>
+			</h:form>
+		</p:dialog>
+	</ui:define>
 </ui:composition>

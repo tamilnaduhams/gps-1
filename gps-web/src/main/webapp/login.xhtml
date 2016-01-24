@@ -1,41 +1,45 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
-    
-    <f:view>
-        
-        <h:head>
-            <title>GPS</title>
-            <h:outputStylesheet name="css/bootstrap-responsive.min.css"/>
-            <h:outputStylesheet name="css/bootstrap.min.css"/> 
-            <h:outputStylesheet name="css/global.css"/> 
-        </h:head>
-        
-        <h:body>
-            <p:growl id="az" life="4000"/>
-            <div class="container">
-                <form  action="#{request.contextPath}/j_spring_security_check" method="POST" class="form-signin">
-                    <center> 
-                        <h:graphicImage  style="margin: 5px auto 35px;" value="/resources/images/logo.jpg"/>
-                        <br/>
-                        <h5 style="font-size:small; color:crimson">
-                            ${fn:replace(SPRING_SECURITY_LAST_EXCEPTION.message, 'Bad credentials', 'Identifant ou mot de passe incorrects !!!')}
-                        </h5>
-                    </center>
-                    <input name="j_username" id="j_username" type="text" class="input-block-level"  placeholder="Login"/>
-                    <input name="j_password" id="j_password" type="password" class="input-block-level" placeholder="Mot de passe"/>
-                    <center>
-                        <button class="btn btn-large " type="submit">S'authentifier</button>
-                    </center>
-                </form>
-            </div>
-            <h:outputScript name="js/jquery-1.9.1.min.js"/>
-            <h:outputScript name="js/bootstrap.min.js"/>
-        </h:body>
-        
-    </f:view>
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+<f:view>
+
+	<h:head>
+		<title>GPS</title>
+		<h:outputStylesheet name="css/bootstrap-responsive.min.css" />
+		<h:outputStylesheet name="css/bootstrap.min.css" />
+		<h:outputStylesheet name="css/global.css" />
+	</h:head>
+
+	<h:body>
+		<p:growl id="az" life="4000" />
+		<div class="container">
+			<form action="#{request.contextPath}/j_spring_security_check"
+				method="POST" class="form-signin">
+				<center>
+					<h:graphicImage style="margin: 5px auto 35px;"
+						value="/resources/images/logo.jpg" />
+					<br />
+					<h5 style="font-size: small; color: crimson">
+						${fn:replace(SPRING_SECURITY_LAST_EXCEPTION.message, 'Bad
+						credentials', 'Identifant ou mot de passe incorrects !!!')}</h5>
+				</center>
+				<input name="j_username" id="j_username" type="text"
+					class="input-block-level" placeholder="Login" /> <input
+					name="j_password" id="j_password" type="password"
+					class="input-block-level" placeholder="Mot de passe" />
+				<center>
+					<button class="btn btn-large " type="submit">S'authentifier</button>
+				</center>
+			</form>
+		</div>
+		<h:outputScript name="js/jquery-1.9.1.min.js" />
+		<h:outputScript name="js/bootstrap.min.js" />
+	</h:body>
+
+</f:view>
 </html>

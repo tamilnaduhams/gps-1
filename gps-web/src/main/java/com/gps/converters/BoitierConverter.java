@@ -4,8 +4,6 @@
  */
 package com.gps.converters;
 
-import com.gps.entities.Boitier;
-import com.gps.facades.local.BoitierFacadeLocal;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.component.UIComponent;
@@ -13,43 +11,47 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
+import com.gps.entities.Boitier;
+import com.gps.facades.local.BoitierFacadeLocal;
+
 @ManagedBean
 @FacesConverter(forClass = Boitier.class, value = "boitierConverter")
-    public class BoitierConverter implements Converter {
-    
-    @EJB
-    private BoitierFacadeLocal boitierFacade;
-        
-        @Override
-        public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
-            if (value == null || value.length() == 0) {
-                return null;
-            }
-            return boitierFacade.find(Boitier.class, getKey(value));
-        }
-        
-        java.lang.Integer getKey(String value) {
-            java.lang.Integer key;
-            key = Integer.valueOf(value);
-            return key;
-        }
-        
-        String getStringKey(java.lang.Integer value) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(value);
-            return sb.toString();
-        }
-                
-        @Override
-        public String getAsString(FacesContext facesContext, UIComponent component, Object object) {
-            if (object == null) {
-                return null;
-            }
-            if (object instanceof Boitier) {
-                Boitier o = (Boitier) object;
-                return getStringKey(o.getId());
-            } else {
-                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Boitier.class.getName());
-            }
-        }
-    }
+public class BoitierConverter implements Converter {
+
+	@EJB
+	private BoitierFacadeLocal boitierFacade;
+
+	@Override
+	public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
+		if (value == null || value.length() == 0) {
+			return null;
+		}
+		return boitierFacade.find(Boitier.class, getKey(value));
+	}
+
+	java.lang.Integer getKey(String value) {
+		java.lang.Integer key;
+		key = Integer.valueOf(value);
+		return key;
+	}
+
+	String getStringKey(java.lang.Integer value) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(value);
+		return sb.toString();
+	}
+
+	@Override
+	public String getAsString(FacesContext facesContext, UIComponent component, Object object) {
+		if (object == null) {
+			return null;
+		}
+		if (object instanceof Boitier) {
+			Boitier o = (Boitier) object;
+			return getStringKey(o.getId());
+		} else {
+			throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName()
+					+ "; expected type: " + Boitier.class.getName());
+		}
+	}
+}

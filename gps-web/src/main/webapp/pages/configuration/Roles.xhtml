@@ -1,113 +1,141 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-                template="/pages/public/SiTemplate.xhtml"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:pe="http://primefaces.org/ui/extensions"> 
+	template="/pages/public/SiTemplate.xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
 
-    <ui:define name="title">
+	<ui:define name="title">
 
-        <h:outputText value="Gps"></h:outputText>
+		<h:outputText value="Gps"></h:outputText>
 
-    </ui:define>
+	</ui:define>
 
-    <ui:define name="bodybar">
+	<ui:define name="bodybar">
 
-        <h:panelGrid columns="1" dir="#{login.dir}">
-            <h:outputText value="Rôles"/>
-        </h:panelGrid>
+		<h:panelGrid columns="1" dir="#{login.dir}">
+			<h:outputText value="Rôles" />
+		</h:panelGrid>
 
-    </ui:define>
+	</ui:define>
 
-    <ui:define name="bodybarRight">
+	<ui:define name="bodybarRight">
 
-        <p:commandButton icon="ui-icon-plusthick" id="btnNouvRole" action="#{droitManagedBean.prepareCreate()}"
-                         value="Nouveau rôle" update=":createRoleForm" oncomplete="createRoleWidget.show();">
-        </p:commandButton>
+		<p:commandButton icon="ui-icon-plusthick" id="btnNouvRole"
+			action="#{droitManagedBean.prepareCreate()}" value="Nouveau rôle"
+			update=":createRoleForm" oncomplete="createRoleWidget.show();">
+		</p:commandButton>
 
-        <p:tooltip for="btnNouvRole" value="Ajout d'un nouveau rôle" showEffect="fade" hideEffect="fade"/>
+		<p:tooltip for="btnNouvRole" value="Ajout d'un nouveau rôle"
+			showEffect="fade" hideEffect="fade" />
 
-    </ui:define>
+	</ui:define>
 
-    <ui:define name="body">
+	<ui:define name="body">
 
-        <h:form id="formRole">
+		<h:form id="formRole">
 
-            <p:spacer height="10"/>
-            <p:panel>
-                <p:dataTable id="listRole" styleClass="ui-datatable-center" value="#{droitManagedBean.listDroit}" var="item" 
-                             paginator="true" rows="10" paginatorPosition="bottom"
-                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" 
-                             emptyMessage="Aucun rôle trouvé !!!">
+			<p:spacer height="10" />
+			<p:panel>
+				<p:dataTable id="listRole" styleClass="ui-datatable-center"
+					value="#{droitManagedBean.listDroit}" var="item" paginator="true"
+					rows="10" paginatorPosition="bottom"
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+					emptyMessage="Aucun rôle trouvé !!!">
 
-                    <p:column headerText="Rôle" sortBy="#{item.libelle}">
-                        <h:outputText value="#{item.libelle}"/>
-                    </p:column>
+					<p:column headerText="Rôle" sortBy="#{item.libelle}">
+						<h:outputText value="#{item.libelle}" />
+					</p:column>
 
-                    <p:column headerText="Niveau" sortBy="#{item.niveau}">
-                        <h:outputText value="#{item.niveau}">
-                            <f:convertNumber minFractionDigits="0" type="number"/>
-                        </h:outputText>
-                    </p:column>
+					<p:column headerText="Niveau" sortBy="#{item.niveau}">
+						<h:outputText value="#{item.niveau}">
+							<f:convertNumber minFractionDigits="0" type="number" />
+						</h:outputText>
+					</p:column>
 
-                    <p:column headerText="Actions" width="50">
+					<p:column headerText="Actions" width="50">
 
-                        <p:commandButton icon="ui-icon ui-icon-search" update=":createRoleForm" id="btnDetails" oncomplete="createRoleWidget.show();"> 
-                            <f:setPropertyActionListener value="#{item}" target="#{droitManagedBean.selectedDroit}"/>
-                        </p:commandButton>
+						<p:commandButton icon="ui-icon ui-icon-search"
+							update=":createRoleForm" id="btnDetails"
+							oncomplete="createRoleWidget.show();">
+							<f:setPropertyActionListener value="#{item}"
+								target="#{droitManagedBean.selectedDroit}" />
+						</p:commandButton>
 
-                        <p:commandButton icon="ui-icon ui-icon-trash" id="btnSupp" oncomplete="confirmation.show();">     
-                            <f:setPropertyActionListener value="#{item}" target="#{droitManagedBean.selectedDroit}"/>
-                        </p:commandButton>
+						<p:commandButton icon="ui-icon ui-icon-trash" id="btnSupp"
+							oncomplete="confirmation.show();">
+							<f:setPropertyActionListener value="#{item}"
+								target="#{droitManagedBean.selectedDroit}" />
+						</p:commandButton>
 
-                        <p:tooltip for="btnDetails" value="Modifier le rôle" showEffect="fade" hideEffect="fade"/>
-                        <p:tooltip for="btnSupp" value="Supprimer le rôle" showEffect="fade" hideEffect="fade"/>
-                    </p:column>
+						<p:tooltip for="btnDetails" value="Modifier le rôle"
+							showEffect="fade" hideEffect="fade" />
+						<p:tooltip for="btnSupp" value="Supprimer le rôle"
+							showEffect="fade" hideEffect="fade" />
+					</p:column>
 
-                </p:dataTable>
-            </p:panel>
-        </h:form>
-    </ui:define>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+	</ui:define>
 
-    <ui:define  name="dialogbox">
+	<ui:define name="dialogbox">
 
-        <p:confirmDialog id="confirmations" message="Êtes vous sûr de bien vouloir procéder à la suppression de ce rôle ?"  
-                         header="Suppression du rôle" severity="alert" widgetVar="confirmation" appendToBody="true">  
-            <h:form>
+		<p:confirmDialog id="confirmations"
+			message="Êtes vous sûr de bien vouloir procéder à la suppression de ce rôle ?"
+			header="Suppression du rôle" severity="alert"
+			widgetVar="confirmation" appendToBody="true">
+			<h:form>
 
-                <p:commandButton id="confirm" value="Oui" update=":formRole:listRole" oncomplete="confirmation.hide()"  
-                                 actionListener="#{droitManagedBean.destroy()}" ajax="false"/>
+				<p:commandButton id="confirm" value="Oui"
+					update=":formRole:listRole" oncomplete="confirmation.hide()"
+					actionListener="#{droitManagedBean.destroy()}" ajax="false" />
 
-                <p:commandButton id="decline" value="Non" onclick="confirmation.hide();" type="button"/>
+				<p:commandButton id="decline" value="Non"
+					onclick="confirmation.hide();" type="button" />
 
-                <p:tooltip for="confirm" value="Valider" showEffect="fade" hideEffect="fade"/>
-                <p:tooltip for="decline" value="Annuler" showEffect="fade" hideEffect="fade"/>
+				<p:tooltip for="confirm" value="Valider" showEffect="fade"
+					hideEffect="fade" />
+				<p:tooltip for="decline" value="Annuler" showEffect="fade"
+					hideEffect="fade" />
 
-            </h:form>
-        </p:confirmDialog>
+			</h:form>
+		</p:confirmDialog>
 
-        <p:dialog closeOnEscape="true" resizable="false" id="createRole" appendToBody="true" closable="true" header="Rôle" widgetVar="createRoleWidget" modal="true">
-            <h:form id="createRoleForm">
+		<p:dialog closeOnEscape="true" resizable="false" id="createRole"
+			appendToBody="true" closable="true" header="Rôle"
+			widgetVar="createRoleWidget" modal="true">
+			<h:form id="createRoleForm">
 
-                <p:panelGrid id="panelCreate" columns="2">
+				<p:panelGrid id="panelCreate" columns="2">
 
-                    <p:outputLabel value="Rôle : " for="role"/>
-                    <p:inputText id="role" required="true" requiredMessage="Le champs rôle est obligatoire !!!" value="#{droitManagedBean.selectedDroit.libelle}" title="Libellé du rôle"/>
+					<p:outputLabel value="Rôle : " for="role" />
+					<p:inputText id="role" required="true"
+						requiredMessage="Le champs rôle est obligatoire !!!"
+						value="#{droitManagedBean.selectedDroit.libelle}"
+						title="Libellé du rôle" />
 
-                    <p:outputLabel value="Niveau : " for="niv"/>
-                    <pe:inputNumber id="niv"  value="#{droitManagedBean.selectedDroit.niveau}" title="Niveau du rôle"/>
+					<p:outputLabel value="Niveau : " for="niv" />
+					<pe:inputNumber id="niv"
+						value="#{droitManagedBean.selectedDroit.niveau}"
+						title="Niveau du rôle" />
 
-                </p:panelGrid>
-                <center>
-                    <p:commandButton id="btnValider" immediate="false" value="Valider" actionListener="#{droitManagedBean.save()}" update=":formRole:listRole"/>
-                    <p:commandButton id="btnAnnuler" value="Annuler" type="reset" onclick="createRoleWidget.hide();"/>
+				</p:panelGrid>
+				<center>
+					<p:commandButton id="btnValider" immediate="false" value="Valider"
+						actionListener="#{droitManagedBean.save()}"
+						update=":formRole:listRole" />
+					<p:commandButton id="btnAnnuler" value="Annuler" type="reset"
+						onclick="createRoleWidget.hide();" />
 
-                    <p:tooltip for="btnValider" value="Valider" showEffect="fade" hideEffect="fade"/>
-                    <p:tooltip for="btnAnnuler" value="Annuler" showEffect="fade" hideEffect="fade"/>
-                </center>
-            </h:form>
-        </p:dialog>
-    </ui:define>
+					<p:tooltip for="btnValider" value="Valider" showEffect="fade"
+						hideEffect="fade" />
+					<p:tooltip for="btnAnnuler" value="Annuler" showEffect="fade"
+						hideEffect="fade" />
+				</center>
+			</h:form>
+		</p:dialog>
+	</ui:define>
 </ui:composition>
